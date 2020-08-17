@@ -45,9 +45,24 @@
  * Note: The returned array must be malloced, assume caller calls free().
  */
 int* inorderTraversal(struct TreeNode* root, int* returnSize){
-
+    struct TreeNode* node[100];
+    int * val;
+    val = malloc(100 * sizeof(int));
+    int index = 0;
+    int size = 0;
+    while (root != NULL || size != 0 ){
+        if (root != NULL){
+            node[size++] = root;
+            root = root->left;
+        } else {
+            size --;
+            val[index++] = node[size]->val;
+            root = node[size]->right;
+        }
+    }
+    *returnSize = index;
+    return val;
 }
-
 
 // @lc code=end
 

@@ -31,7 +31,24 @@
 
 
 int trap(int* height, int heightSize){
-
+    int *stack = (int *)malloc((heightSize + 1) * sizeof(int));
+    int top = 0;
+    int distance = 0;
+    int bounded_height = 0;
+    int result = 0;
+    for (int i = 0; i < heightSize; i++) {
+        while (top != 0 && height[i] > height[stack[top]]) {
+            top--;
+            if (top == 0)
+                break;
+            distance = i - stack[top] - 1;
+            bounded_height = fmin(height[i], height[stack[top]]) - height[stack[top + 1]];
+            result += distance * bounded_height;
+        }
+        stack[++top] = i;
+    }
+    free(stack);
+    return result;
 }
 
 

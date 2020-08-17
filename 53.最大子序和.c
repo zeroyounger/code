@@ -32,9 +32,15 @@
 
 
 int maxSubArray(int* nums, int numsSize){
-
+    int ans=nums[0];
+    int sum=0;
+    for(int i=0;i!=numsSize;i++){
+        if(sum>0) sum+=nums[i];
+        else sum=nums[i];
+        ans=fmax(ans,sum);
+    }
+    return ans;
 }
-
 
 // @lc code=end
 

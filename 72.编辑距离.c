@@ -53,7 +53,22 @@
 
 
 int minDistance(char * word1, char * word2){
-
+    int m = strlen(word1);
+    int n = strlen(word2);
+    int cost[m+1][n+1];
+    for (int i = 0; i <= m; ++i)
+        cost[i][0] = i;
+    for (int j = 0; j <= n; ++j)
+        cost[0][j] = j;
+    for (int i = 1; i <= m; ++i) {
+        for (int j = 1; j <= n; ++j) {
+            if (word1[i-1] == word2[j-1])
+                cost[i][j] = cost[i-1][j-1];
+            else
+                cost[i][j] = 1 + fmin(cost[i-1][j-1], fmin(cost[i][j-1], cost[i-1][j]));
+        }
+    }
+    return cost[m][n];
 }
 
 

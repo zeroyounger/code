@@ -51,8 +51,17 @@
 // @lc code=start
 
 
-bool isNumber(char * s){
-
+bool isNumber(char *s){
+    char *end = NULL;
+    strtod(s, &end);
+    if (end == s)
+        return false;
+    while (*end != 0) {
+        if (*end != ' ')
+            return false;
+        end++;
+    }
+    return true;
 }
 
 

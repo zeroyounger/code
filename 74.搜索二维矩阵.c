@@ -49,9 +49,19 @@
 
 
 bool searchMatrix(int** matrix, int matrixSize, int* matrixColSize, int target){
-
+    if(matrix == NULL || matrixColSize == NULL || matrixSize == 0)
+    	return false;
+    int right = *matrixColSize-1, top = 0;
+    while(top < matrixSize && right >= 0){
+    	if(matrix[top][right] == target)
+    		return true;
+    	else if(matrix[top][right] < target)
+    		top++;
+    	else if(matrix[top][right] > target)
+    		right--;
+    }
+    return false;
 }
-
 
 // @lc code=end
 

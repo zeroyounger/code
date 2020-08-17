@@ -60,8 +60,50 @@
  * The sizes of the arrays are returned as *returnColumnSizes array.
  * Note: Both returned array and *columnSizes array must be malloced, assume caller calls free().
  */
+#define maxn 1000
+static int arr[maxn];
+int checkValid(int *arr,int i,int depth) {
+	int k;
+	for(k=0;k<depth;k++){
+		if(i == arr[k])           
+			return 1;
+		if (abs(arr[k] - i) == depth - k)
+			return 1; 
+	}
+	return 0;
+} 
+void f(int n,char ***p,int *returnSize,int depth){
+	int i,j,k;
+	if ( depth == n){
+		p[*returnSize] = (char **)malloc(sizeof(char *) * n);
+		for( j = 0; j < n; j++){
+			(p[*returnSize])[j] =(char *)malloc(sizeof(char)*(n+1));
+			for( k = 0; k < n; k++)
+				((p[*returnSize])[j])[k] = '.';
+			((p[*returnSize])[j])[arr[j]] = 'Q';  
+			((p[*returnSize])[j])[n] ='\0'; 
+		}
+		(*returnSize)++;
+	}
+	for( i = 0; i < n; i++){
+		if (checkValid(arr,i,depth)){
+			continue;  
+		}else {
+			arr[depth] = i;
+			f(n,p,returnSize,depth+1);  
+		}         
+	}   
+}
 char *** solveNQueens(int n, int* returnSize, int** returnColumnSizes){
-
+	char ***p;
+	int i;
+	p = (char ***) malloc(sizeof(char **) * 1000);
+	*returnSize = 0;
+	f(n,p,returnSize,0); 
+	*returnColumnSizes = (int *) malloc(sizeof(int)*(*returnSize));
+	for ( i = 0; i <(*returnSize); i++)
+		(*returnColumnSizes)[i] = n;
+	return p;    
 }
 
 

@@ -56,9 +56,17 @@
 
 
 int uniquePaths(int m, int n){
-
+    if (m <= 0 || n <= 0) return 0;
+    int*  table = malloc(m*n*sizeof(int));
+    for (int i = 0; i < m; i++)
+        table[i] = 1;
+    for (int i = 0; i < n; i++)
+        table[m*i] = 1;
+    for (int i = 1; i < m; i++)
+        for (int j = 1; j < n; j++)
+            table[j*m+i] = table[(j-1)*m+i] + table[j*m+i-1];
+    return table[m*n-1];
 }
-
 
 // @lc code=end
 

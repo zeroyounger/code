@@ -62,8 +62,43 @@
 /**
  * Note: The returned array must be malloced, assume caller calls free().
  */
-struct TreeNode** generateTrees(int n, int* returnSize){
+struct TreeNode** generateSubTrees(int s, int e, int* returnSubSize){
+    struct TreeNode** subArr = (struct TreeNode**)malloc(2000*sizeof(struct TreeNode*));
+    int subArrLen = 0;
+    for(int i = s; i <= e; i++){
+        int leftSubSize = 0;
+        struct TreeNode** leftSubArr = generateSubTrees(s, i-1, &leftSubSize);
+        int rightSubSize = 0;
+        struct TreeNode** rightSubArr = generateSubTrees(i+1, e, &rightSubSize);
+        for(int l = 0; l < leftSubSize; l++){
+            for(int r = 0; r < rightSubSize; r++){
+                struct TreeNode* root = (struct TreeNode*)malloc(sizeof(struct TreeNode));
+                root->val = i;
+                root->left = leftSubArr[l];
+                root->right = rightSubArr[r];
+                subArr[subArrLen] = root;
+                subArrLen++;
+            }
+        }
+    }
+    if(s > e){
+        subArr[subArrLen] = NULL;
+        subArrLen++;
+    }
+    *returnSubSize = subArrLen;
+    return subArr;
+}
 
+struct TreeNode** generateTrees(int n, int* returnSize){
+    struct TreeNode** ans = (struct TreeNode**)malloc(2000*sizeof(struct TreeNode*));
+    if(n < 1){
+        *returnSize = 0;
+        return NULL;
+    }
+    int returnSubSize = 0;
+    ans = generateSubTrees(1, n, &returnSubSize);
+    *returnSize = returnSubSize;
+    return ans;
 }
 // @lc code=end
 

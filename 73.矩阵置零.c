@@ -60,7 +60,26 @@
 
 
 void setZeroes(int** matrix, int matrixSize, int* matrixColSize){
-
+    int** temp;
+    temp = malloc(sizeof(int*) * matrixSize);
+    for (int i = 0; i < matrixSize; i++)
+        *(temp + i) = malloc(*(matrixColSize + i) * sizeof(int));
+    int row = matrixSize;
+    int col = matrixColSize[0];
+    for (int i = 0; i < row; i++)
+        for (int j = 0; j < col; j++)
+            temp[i][j] = matrix[i][j];
+    for (int i = 0; i < row; i++) {
+        for (int j = 0; j < col; j++) {
+            if (temp[i][j] == 0) {
+                int k;
+                for (k = 0; k < row; k++)
+                    matrix[k][j] = 0;
+                for (k = 0; k < col; k++)
+                    matrix[i][k] = 0;
+            }
+        }
+    } 
 }
 // @lc code=end
 

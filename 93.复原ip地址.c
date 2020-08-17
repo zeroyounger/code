@@ -69,8 +69,65 @@
 /**
  * Note: The returned array must be malloced, assume caller calls free().
  */
-char ** restoreIpAddresses(char * s, int* returnSize){
+void get_ret(char **ret, int *ret_index, int *stack, int len, char *s){
+    int index = 0;
+    int index_s = 0;
+    int i=0;
+    int left=0;
+    ret[(*ret_index)] = (char *)malloc(sizeof(char) * (len+5));
+    for(i=0; i<4; i++){
+        left = stack[i];
+        while(left){
+            ret[(*ret_index)][index++] = s[index_s++];
+            left--;
+        }
+        if(i<3)
+            ret[(*ret_index)][index++] = '.';
+    }
+    ret[(*ret_index)][index++] = '\0';
+    (*ret_index)++;
+}
 
+void rec(char *s, int len, int index, int left_num, int left_len,
+         char **ret, int *ret_index, int *stack, int *stack_index){
+    int i, j;
+    /* 非法 */
+    if(left_num < 0 || left_num*3 < left_len || index > len || left_num<0 || left_len<0 ||
+       (left_num==0 && left_len!=0)) return;
+    /* 设置符合的结果到返回字符串 */
+    if(left_num == 0 && left_len == 0){
+        get_ret(ret, ret_index, stack, len, s);
+        return ;
+    }
+    /* 每次尝试1，2，3个字符 */
+    for(i=1; i<=3; i++){
+        /* 排除超过255的数字 */
+        if(i==3 && (index+i > len || memcmp(&s[index], "255", 3) > 0))
+            continue;
+        /* 排除以0开头的数字 */
+        if(i!=1 && s[index]=='0')
+            continue;
+        stack[(*stack_index)++] = i;
+        rec(s, len, index+i, left_num-1, left_len-i, ret, ret_index, stack, stack_index);
+        (*stack_index)--;
+    }
+}
+#define LEN 0xffff
+int get_str_len(char *s){
+    int i=0;
+    while(*s++ != '\0')
+        i++;
+    return i;
+}
+char ** restoreIpAddresses(char * s, int* returnSize){
+   char **ret = (char **)malloc(sizeof(char) * LEN);
+   int ret_index = 0;
+   int stack[4];
+   int stack_index = 0;
+   int len = get_str_len(s);
+   rec(s, len, 0, 4, len, ret, &ret_index, stack, &stack_index);
+   *returnSize = ret_index;
+   return ret;
 }
 // @lc code=end
 

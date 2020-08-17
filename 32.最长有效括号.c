@@ -33,11 +33,41 @@
 
 // @lc code=start
 
-
 int longestValidParentheses(char * s){
-
+    int  left=0,right=0,max=0;
+    char *ts=s;
+    while(*s){
+        if(*s=='(')
+            left++;
+        else{
+            right++;
+            if(left==right)
+                max=left>max?left:max;
+            else if(left<right){
+                left=0;
+                right=0;
+            }
+        }
+        s++;
+    }
+    s--;
+    left=right=0;
+    while(s>=ts){
+        if(*s==')')
+            left++;
+        else{
+            right++;
+            if(left==right)
+                max=left>max?left:max;
+            else if(left<right){
+                left=0;
+                right=0;
+            }
+        }
+        s--;
+    }
+    return max*2;
 }
-
 
 // @lc code=end
 

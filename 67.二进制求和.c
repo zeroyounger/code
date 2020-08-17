@@ -44,10 +44,27 @@
 // @lc code=start
 
 
-char * addBinary(char * a, char * b){
-
+void Reverse(char *s,int n){ 
+    for(int i=0,j=n-1;i<j;i++,j--){ 
+        char c=s[i]; 
+        s[i]=s[j]; 
+        s[j]=c; 
+    } 
 }
 
+char * addBinary(char * a, char * b){
+    int c=0,i=strlen(a)-1,j=strlen(b)-1,k=0;
+    char *s=(char*)calloc(i+j+3,sizeof(char));
+    while(i >= 0 || j >= 0 || c == 1){
+        c += i >= 0 ? a[i--] - '0' : 0;
+        c += j >= 0 ? b[j--] - '0' : 0;
+        s[k]=(c & 1) + '0';
+        k++;
+        c >>= 1;
+    }
+    Reverse(s,strlen(s));
+    return s;
+}
 
 // @lc code=end
 

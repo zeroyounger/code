@@ -74,8 +74,28 @@
  */
 
 
-void recoverTree(struct TreeNode* root){
-
+typedef struct TreeNode TreeNode;
+void recoverTree(struct TreeNode* cur){
+    TreeNode* stack[1000];
+    int idx = 0;
+    TreeNode*pre = NULL;
+    TreeNode* errorNode1 = NULL, *errorNode2 = NULL;
+    while (cur != NULL || idx != 0) {
+        while (cur != NULL) {
+            stack[idx++] = cur;
+            cur = cur->left;
+        }
+        cur = stack[--idx];
+        if (pre != NULL && cur->val < pre->val) {
+            if (errorNode1 == NULL) errorNode1 = pre;
+            errorNode2 = cur;
+        }
+        pre = cur;
+        cur = cur->right;
+    }
+    int v = errorNode1->val;
+    errorNode1->val = errorNode2->val;
+    errorNode2->val = v;
 }
 // @lc code=end
 

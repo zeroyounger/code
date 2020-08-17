@@ -49,8 +49,46 @@
 // @lc code=start
 
 
-int divide(int dividend, int divisor){
-
+int divide(int dividend, int divisor) {
+    if(dividend == divisor) return 1;
+    if(divisor == INT_MIN) return 0;
+    bool flag = false;
+    if (dividend == INT_MIN) {
+        flag = true;
+        //除数超大，分成 dividend - divisor + divisor，商变成 new-dividend + 1
+        dividend += abs(divisor);
+    }
+    bool sameSign = false;
+    if (( dividend >= 0) && (divisor >= 0))  {
+        sameSign = true;
+    } else if (( dividend < 0) && (divisor < 0)) {
+        sameSign = true;
+    }
+    dividend = abs(dividend);
+    divisor = abs(divisor);
+    int i;
+    int tmp;
+    int res =0;
+    for (i = 31; i >=0; i--) {
+        tmp = (dividend >> i);
+        res = (res << 1) + (tmp >= divisor);
+        if(tmp >= divisor) {
+            //101101 除以10，右移4 与 10 比大小，divisor 左移4位变成 100000，与被除数相减，变成 1101
+            dividend -= divisor << i;
+        }
+    }
+    //res 就是结果
+    if (flag) {
+        //结果+1 或者减1
+        if (sameSign) {
+            //两个负数，商是正数
+            return (res != INT_MAX) ? (res+1):res;
+        } else {
+            //一个负数，一个正数，结果负数
+            return -res-1;
+        }
+    }
+    return sameSign? res: (-res);
 }
 
 

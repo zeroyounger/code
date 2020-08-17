@@ -70,11 +70,70 @@
 
 // @lc code=start
 
-
-char * intToRoman(int num){
-
+char *intToRoman(int num)
+{
+    static char result[16];
+    char romanChar[7] = {'I', 'V', 'X', 'L', 'C', 'D', 'M'};
+    int digits;
+    char numPointer = 0;
+    char pointer = 14;
+    do
+    {
+        digits = num % 10;
+        do
+        {
+            if (digits == 8)
+            {
+                result[pointer--] = romanChar[numPointer];
+                digits--;
+            }
+            if (digits == 7)
+            {
+                result[pointer--] = romanChar[numPointer];
+                digits--;
+            }
+            if (digits == 6)
+            {
+                result[pointer--] = romanChar[numPointer];
+                digits--;
+            }
+            if (digits == 5)
+            {
+                result[pointer--] = romanChar[numPointer + 1];
+                break;
+            }
+            if (digits == 4)
+            {
+                result[pointer--] = romanChar[numPointer + 1];
+                digits = 1;
+            }
+            if (digits == 3)
+            {
+                result[pointer--] = romanChar[numPointer];
+                digits--;
+            }
+            if (digits == 2)
+            {
+                result[pointer--] = romanChar[numPointer];
+                digits--;
+            }
+            if (digits == 1)
+            {
+                result[pointer--] = romanChar[numPointer];
+                break;
+            }
+            if (digits == 9)
+            {
+                result[pointer--] = romanChar[numPointer + 2];
+                result[pointer--] = romanChar[numPointer];
+                break;
+            }
+            break;
+        } while (true);
+        num /= 10;
+        numPointer += 2;
+    } while (num);
+    return result + pointer + 1;
 }
 
-
 // @lc code=end
-

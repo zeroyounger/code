@@ -38,8 +38,29 @@
  * The sizes of the arrays are returned as *returnColumnSizes array.
  * Note: Both returned array and *columnSizes array must be malloced, assume caller calls free().
  */
+void fun(int n, int k, int *path,int**result,int *returnSize,int **returnColumnSizes,int K){
+    if(k==0){
+        result[*returnSize] = (int*)malloc(sizeof(int)*K);
+        for(int i=0;i<K;++i)
+            result[*returnSize][i] = path[i];
+        ++(*returnSize);
+        return;
+    }
+    for(int j=n;j>=k;--j){
+        path[k-1] = j;
+        fun(j-1,k-1,path,result,returnSize,returnColumnSizes,K);
+    }
+}
 int** combine(int n, int k, int* returnSize, int** returnColumnSizes){
-
+    int **result = (int**)malloc(sizeof(int*)*5000);    //假设不超过1024行
+    int *path = (int*)malloc(sizeof(int)*k);     //记录每一次的路径
+    *returnColumnSizes = (int*)malloc(sizeof(int)*5000);
+    *returnSize = 0;
+    if(n==0||k==0)  return result;
+    fun(n,k,path,result,returnSize,returnColumnSizes,k);
+    for(int i=0;i<(*returnSize);++i)
+        (*returnColumnSizes)[i] = k;
+    return result;
 }
 // @lc code=end
 

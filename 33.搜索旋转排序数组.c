@@ -40,7 +40,30 @@
 
 
 int search(int* nums, int numsSize, int target){
-
+	int retval = -1;
+	int left = 0;
+	int right = numsSize - 1;
+	int median = (left + right) / 2;
+	while(left <= right){
+		if(nums[median] == target){
+			retval = median;
+			break;
+		}else{
+			if(nums[median] >= nums[left]){
+				if(target >= nums[left] && target < nums[median])
+					right = median - 1;
+				else
+					left = median + 1;
+			}else{
+				if(target > nums[median] && target <= nums[right])
+					left = median + 1;
+				else
+					right = median - 1;
+			}
+            median = (left + right) / 2;
+		}
+	}
+	return retval;
 }
 // @lc code=end
 

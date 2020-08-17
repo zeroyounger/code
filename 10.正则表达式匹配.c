@@ -77,7 +77,29 @@
 
 
 bool isMatch(char * s, char * p){
-
+	int s_len = strlen(s);
+	int p_len = strlen(p);
+	int i = 0;
+	int j = 0;
+	bool matrix[100][100] = { false };
+	matrix[s_len][p_len] = true;
+	for (i = s_len; i >= 0; --i) {
+		for (j = p_len - 1; j >= 0; --j) {
+			if (s[i] == p[j] || p[j] == '.') { // 'a-z' == 'a-z' || 'a-z' == '.'
+				matrix[i][j] = matrix[i + 1][j + 1];
+			}
+			else if (p[j] == '*') {
+				if (s[i] == p[j - 1] || p[j - 1] == '.') { // 'a-z' == '.*' 
+					matrix[i][j - 1] = (matrix[i][j + 1] || matrix[i + 1][j - 1]);
+				}
+				else {
+					matrix[i][j - 1] = matrix[i][j + 1];
+				}
+				--j;
+			}
+		}
+	}
+	return matrix[0][0];
 }
 
 

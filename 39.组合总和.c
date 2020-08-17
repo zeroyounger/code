@@ -65,8 +65,38 @@
  * The sizes of the arrays are returned as *returnColumnSizes array.
  * Note: Both returned array and *columnSizes array must be malloced, assume caller calls free().
  */
-int** combinationSum(int* candidates, int candidatesSize, int target, int* returnSize, int** returnColumnSizes){
+int comp(const void* a, const void* b){
+    return *(int*)a - *(int*)b;
+}
 
+void _combinationSum(int* candidates, int candidatesSize, int i, int target, int* buf, int bufSize, int** res, int* returnSize, int** returnColumnSizes){
+    if(target == 0){
+        res[*returnSize] = (int*)malloc(sizeof(int) * bufSize);
+        (*returnColumnSizes)[*returnSize] = bufSize;
+        for(int j = 0; j < bufSize; j++){
+            res[*returnSize][j] = buf[j];
+        }
+        (*returnSize)++;
+        return ;
+    }
+    for(; i < candidatesSize; i++){
+        if(candidates[i] > target){
+            break;
+        }
+        buf[bufSize] = candidates[i];
+        _combinationSum(candidates, candidatesSize, i, target-candidates[i], buf, bufSize+1, res, returnSize, returnColumnSizes);
+    }
+}
+
+int** combinationSum(int* candidates, int candidatesSize, int target, int* returnSize, int** returnColumnSizes){
+    qsort(candidates, candidatesSize, sizeof(int), comp);
+    int** res = (int**)malloc(sizeof(int*) * 256);
+    *returnColumnSizes = (int*)malloc(sizeof(int) * 256);
+    *returnSize = 0;
+    int* buf = (int*)malloc(sizeof(int) * 256);
+    _combinationSum(candidates, candidatesSize, 0, target, buf, 0, res, returnSize, returnColumnSizes);
+    free(buf);
+    return res;
 }
 // @lc code=end
 

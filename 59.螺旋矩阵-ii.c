@@ -36,7 +36,37 @@
  * Note: Both returned array and *columnSizes array must be malloced, assume caller calls free().
  */
 int** generateMatrix(int n, int* returnSize, int** returnColumnSizes){
-
+    int **g = (int **)malloc(sizeof(int *) * n);
+    returnColumnSizes[0] = (int*)malloc(n * sizeof(int));
+    for(int i = 0; i < n; i++) {
+        g[i] = (int *)malloc(sizeof(int) * n);
+        returnColumnSizes[0][i] = n;
+    }
+    int up = 0;
+    int left = 0;
+    int right = n - 1;
+    int down = n -1;
+    int cnt = 1;
+    while (1) {
+        for(int i = left; i <= right; i++)
+            g[up][i] = cnt++;
+        if(++up > down)
+            break;
+        for(int i = up; i <= down; i++)
+            g[i][right] = cnt++;
+        if(--right < left)
+            break;
+        for (int i = right; i >=left; i--)
+            g[down][i] = cnt++;
+        if(--down < up)
+            break;
+        for (int i = down; i >= up; i--)
+            g[i][left] = cnt++;
+        if(++left >right)
+            break;
+    }
+    *returnSize = n;
+    return g;
 }
 
 

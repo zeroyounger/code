@@ -39,8 +39,16 @@
 
 
 int mySqrt(int x){
-
+    if(x<2)
+        return x;
+    double t = x;
+    double x0 = x;
+    x0 = x0/2 + t/(2*x0);
+    while(x0*x0 - t > 0.00001)
+        x0 = x0/2 + t/(2*x0);
+    return (int)x0;
 }
+
 
 
 // @lc code=end

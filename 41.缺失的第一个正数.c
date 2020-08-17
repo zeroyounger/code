@@ -47,7 +47,21 @@
 
 
 int firstMissingPositive(int* nums, int numsSize){
-
+    for (int i = 0; i < numsSize; i++) {
+        int j = nums[i];
+        nums[i] = 0;
+        while (j <= numsSize && j > 0 && nums[j - 1] != j) {
+            int j_new = nums[j - 1];
+            nums[j - 1] = j;
+            j = j_new;
+        }
+    }
+    for (int i = 0; i < numsSize; i++) {
+        int j = i + 1;
+        if (nums[j - 1] != j)
+            return j;
+    }
+    return numsSize + 1;
 }
 // @lc code=end
 

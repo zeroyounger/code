@@ -40,7 +40,18 @@
 
 
 char * longestCommonPrefix(char ** strs, int strsSize){
-
+    if(strsSize == 0) return "";
+    if(strsSize == 1) return strs[0];
+    int j = 0;
+    while(1){
+        for(int i = 1; i < strsSize; i++)
+            if(strs[0][j] != strs[i][j] || !strs[0][j] || !strs[i][j]){
+                strs[0][j] = 0;
+                return strs[0];
+            }
+        j++;
+    }
+    return NULL;
 }
 
 

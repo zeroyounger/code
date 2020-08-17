@@ -70,8 +70,28 @@
  */
 
 
+struct ListNode* mergeKListsSub(struct ListNode** lists, int listsSize){
+    struct ListNode* temp = NULL;
+    int val = INT_MAX;
+    int pos = -1;
+    int i;
+    for(i = 0; i < listsSize;i++){
+        if(lists[i]){
+            if(val > lists[i]->val){
+                val = lists[i]->val;
+                pos = i;
+            }
+        }
+    }
+    if(pos != -1){
+        temp = lists[pos];
+        lists[pos] = lists[pos]->next;
+        temp->next = mergeKListsSub(lists,listsSize);
+    }
+    return temp;
+}
 struct ListNode* mergeKLists(struct ListNode** lists, int listsSize){
-
+    return mergeKListsSub(lists,listsSize);
 }
 // @lc code=end
 

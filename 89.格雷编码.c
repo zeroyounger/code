@@ -57,7 +57,18 @@
  * Note: The returned array must be malloced, assume caller calls free().
  */
 int* grayCode(int n, int* returnSize){
-
+    int number = 1<<n;
+    int *res = calloc(number+1,sizeof(int));
+    int count = 1;
+    for (int i = 0;i <n;i++){
+        int add =  1 << i;
+        for (int j = count-1;j>=0;j--){
+            res[count] = res[j]+add;
+            count++;
+        }
+    }
+    *returnSize = count;
+    return res;
 }
 
 

@@ -29,8 +29,41 @@
 // @lc code=start
 
 
-void nextPermutation(int* nums, int numsSize){
+int comp(const void* a,const void* b){
+    return *(int *)a - *(int *)b;
+}
 
+void nextPermutation(int* nums, int numsSize) {
+    //判断是不是最大排列
+    int i,head;
+    for(i=numsSize-1;i>=1;i--){
+        if(nums[i-1]<nums[i])break;
+    }
+    if(i==0){
+        //已经是最大排列,返回升序
+        qsort(nums,numsSize,sizeof(int),comp);
+        return;
+    }else{
+        //找到了领头点，从领头+1找略大的值
+        head = i-1;
+        int min = 99999;
+        int index = 0;
+        
+        for(i=head+1;i<numsSize;i++){
+            if(nums[i]>nums[head] && (nums[i]-nums[head]) < min){
+                min = nums[i]-nums[head];
+                index = i;
+            }
+        }
+        //交换nums[head]和nums[index];
+        int tmp;
+        tmp = nums[head];
+        nums[head] = nums[index];
+        nums[index] = tmp;
+        //如果head不是倒数第二个，那么将head后面的升序
+        if(head!=numsSize-2)qsort(nums+head+1,numsSize-head-1,sizeof(int),comp);
+        return;
+    }
 }
 // @lc code=end
 

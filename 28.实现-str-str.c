@@ -42,7 +42,19 @@
 
 
 int strStr(char * haystack, char * needle){
-
+    int len2 = strlen(needle);
+    if (!len2) return 0;
+    int len1 = strlen(haystack), j;
+    for (int i = 0; i <= len1 - len2; i++)
+        if (haystack[i] == needle[0] && haystack[i + len2 - 1] == needle[len2 - 1]){
+            for (j = 1; j < len2; j++)
+                if (haystack[i + j] != needle[j])
+                    break;
+            if (j == len2)
+                return i;
+        }
+    return -1;
 }
+
 // @lc code=end
 

@@ -35,10 +35,30 @@
  */
 
 
-struct ListNode* reverseBetween(struct ListNode* head, int m, int n){
-
+struct ListNode* reverseBetween(struct ListNode* head, int m, int n) {
+	struct ListNode *p, *q, *new;
+	struct ListNode HEAD;
+	int index, num = m;
+	HEAD.next = head;
+	if(m >= n) {
+		return head;
+	}
+	new = &HEAD;
+	while( num > 1 ) {
+		new = new->next;
+		num--;
+	}
+	p = new->next;
+	index = 0;
+	while(index < n-m){
+		q = p->next;
+		p->next = q->next;
+		q->next = new->next;
+		new->next = q;
+		index++;
+	}
+	return HEAD.next;
 }
-
 
 // @lc code=end
 

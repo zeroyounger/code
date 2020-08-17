@@ -59,9 +59,28 @@
 
 
 bool isValidBST(struct TreeNode* root){
-
+    if(!root)
+        return true;
+    if(root->left) {
+        struct TreeNode *cur = root->left;
+        while(cur->right!=NULL)
+            cur = cur->right;
+        if(cur->val >= root->val)
+            return false;
+    }
+    if(root->right) {
+        struct TreeNode *cur = root->right;
+        while(cur->left!=NULL)
+            cur = cur->left;
+        if(cur->val <= root->val)
+            return false;
+    }
+    if(!isValidBST(root->left))
+        return false;
+    if(!isValidBST(root->right))
+        return false;
+    return true;
 }
-
 
 // @lc code=end
 

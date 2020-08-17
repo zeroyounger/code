@@ -47,7 +47,47 @@
  * Note: The returned array must be malloced, assume caller calls free().
  */
 int* findSubstring(char * s, char ** words, int wordsSize, int* returnSize){
-
+    static int out[1000];
+    int cnt = 0;
+    if (s == NULL || wordsSize == NULL || wordsSize <= 0) {
+        *returnSize = cnt;
+        return out;
+    }
+    int slen = strlen(s);
+    int wlen = strlen(words[0]);
+    int sum = 0;
+    for (int i = 0; i < wordsSize; i++)
+        sum += words[i][0];
+    for (int i = 0; i < wlen; i++) {
+        int times = (slen - i) / wlen - wordsSize + 1;
+        int tmp = 0;
+        for (int j = 0; j < (wordsSize - 1); j++)
+            tmp += s[i + j * wlen];
+        for (int j = 0; j < times; j++) {
+            tmp += s[i + (j + wordsSize - 1) * wlen];
+            if (tmp == sum) {
+                char flags[wordsSize];
+                memset(flags, 0, wordsSize);
+                for (int m = 0; m < wordsSize; m++) {
+                    for (int n = 0; n < wordsSize; n++) {
+                        if ((flags[n] == 0) && (strncmp(&s[i + (j + m) * wlen], words[n], wlen) == 0)) {
+                            flags[n] = 1;
+                            break;
+                        }
+                    }
+                }
+                int ccc = 0;
+                for (int m = 0; m < wordsSize; m++)
+                    if (flags[m] == 1)
+                        ccc++;
+                if (ccc == wordsSize)
+                    out[cnt++] = i + j * wlen;
+            }
+            tmp -= s[i + j * wlen];
+        }
+    }
+    *returnSize = cnt;
+    return out;
 }
 
 

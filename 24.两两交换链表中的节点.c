@@ -36,8 +36,17 @@
  */
 
 
-struct ListNode* swapPairs(struct ListNode* head){
-
+struct ListNode* swapPairs(struct ListNode* head) {
+	struct ListNode *ret, **last = &ret, *tmp;
+	while (head && head->next) {
+		*last = head->next;			
+		last = &head->next;	
+		tmp = head->next->next;
+		head->next->next = head;
+		head = tmp; 
+	}
+	*last = head;
+	return ret;
 }
 
 

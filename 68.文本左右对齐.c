@@ -85,7 +85,66 @@
  * Note: The returned array must be malloced, assume caller calls free().
  */
 char ** fullJustify(char ** words, int wordsSize, int maxWidth, int* returnSize){
+    *returnSize = 0; 
+    char ** res = (char**)malloc(wordsSize * sizeof(char*));
+    int*  len = (int*)malloc(wordsSize * sizeof(int));
+    int*  blank = (int*)malloc(wordsSize * sizeof(int));
+    memset(len, 0, wordsSize * sizeof(int));
+    memset(blank, 0, wordsSize * sizeof(int));
+    int count = 0;
+    for(int i = 0; i < wordsSize; ){
+        if (len[count] + blank[count] + strlen(words[i]) > maxWidth){
+            count++;
+        }
+        else{
+            len[count] += strlen(words[i]);
+            blank[count]++;
+            i++;
+        }
 
+    }
+    int widx1= 0;
+    count++;
+    for(int i = 0; i < count; i++)
+        widx1 += blank[i];
+    int widx= 0;
+    for(int i = 0; i < count; i++){
+        res[i] = (char*)malloc(maxWidth + 1);
+        memset(res[i], ' ', maxWidth);
+        res[i][maxWidth] = '\0';
+        if (i == count -1){
+            char* p = res[i];
+            for(int j = 0; j <blank[i]; j++){
+                memcpy(p, words[widx + j], strlen(words[widx + j]));
+                p += strlen(words[widx + j]) + 1;
+            }
+        }
+        else{
+            char* p = res[i];
+            int fillblank = maxWidth - len[i];
+            if (blank[i] ==1){
+                memcpy(p, words[widx], strlen(words[widx]));
+            }
+            else{
+                int y = fillblank/(blank[i]-1);
+                int m = fillblank%(blank[i]-1);
+                memcpy(p, words[widx], strlen(words[widx]));
+                for(int j = 1; j <blank[i]; j++){
+                    if (m > 0){
+                        p += strlen(words[widx + j -1]) + y + 1;
+                        m --;
+                    }
+                    else{
+                        p += strlen(words[widx + j -1]) + y;
+                    }
+                    memcpy(p, words[widx + j], strlen(words[widx + j]));
+                }
+            }
+            widx += blank[i];
+        }
+    }
+    *returnSize = count;
+    return res;
 }
 
 

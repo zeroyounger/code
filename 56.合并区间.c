@@ -50,8 +50,37 @@
  * The sizes of the arrays are returned as *returnColumnSizes array.
  * Note: Both returned array and *columnSizes array must be malloced, assume caller calls free().
  */
+int compare(const void *p1, const void *p2){   
+    return ((int **)p1)[0][0] - ((int **)p2)[0][0];
+}
 int** merge(int** intervals, int intervalsSize, int* intervalsColSize, int* returnSize, int** returnColumnSizes){
-
+    int **listIn = intervals;
+    int len = intervalsSize;
+    int **listOut;  
+    int count;    
+    int i;
+    qsort(listIn, len, sizeof(listIn[0]), compare);
+    for (i=0,count=0,listOut=NULL; i<len; i++){
+        int tailOutRow = count == 0 ? -1 : count-1;
+        int tailOutEnd = count == 0 ? 0 : listOut[tailOutRow][1];
+        int curInStart = listIn[i][0];
+        int curInEnd = listIn[i][1];
+        if (i==0 || curInStart>tailOutEnd) {
+            count++;
+            tailOutRow++;
+            listOut = (int **)realloc(listOut, sizeof(int *)*count);
+            listOut[tailOutRow] = (int *)malloc(sizeof(int)*2);
+            listOut[tailOutRow][0] = curInStart;
+            listOut[tailOutRow][1] = curInEnd;            
+        }
+        else
+            listOut[tailOutRow][1] = curInEnd > tailOutEnd ? curInEnd : tailOutEnd;                     
+    }
+    *returnColumnSizes = (int *)malloc(sizeof(int)*count);        
+    for (i=0; i<count; i++)
+        (*returnColumnSizes)[i] = 2;
+    *returnSize = count;    
+    return listOut;
 }
 // @lc code=end
 

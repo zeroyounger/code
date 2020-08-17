@@ -77,9 +77,20 @@
 
 
 bool isValidSudoku(char** board, int boardSize, int* boardColSize){
-
+    int row[9][10]={0};int col[9][10]={0};int mat[9][10]={0};
+    for(int i=0;i<9;i++)
+        for(int j=0;j<9;j++){
+            if(board[i][j] == '.')
+                continue;
+            int num = board[i][j] - '0';  // 得到数字
+            if(row[i][num] || col[j][num] || mat[(i/3)*3 + j / 3][num])
+                return false;
+            row[i][num] = 1;
+            col[j][num] = 1;
+            mat[(i/3)*3 + j / 3][num] = 1;
+        }
+    return true;
 }
-
 
 // @lc code=end
 

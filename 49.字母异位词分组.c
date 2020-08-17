@@ -42,8 +42,50 @@
  * The sizes of the arrays are returned as *returnColumnSizes array.
  * Note: Both returned array and *columnSizes array must be malloced, assume caller calls free().
  */
-char *** groupAnagrams(char ** strs, int strsSize, int* returnSize, int** returnColumnSizes){
-
+typedef struct {
+    unsigned long long key;
+    int index;
+} StrkeyInfo;
+int comp(StrkeyInfo *a, StrkeyInfo *b){
+    return (a->key > b->key) ? 1 : -1;
+}
+char ***groupAnagrams(char **strs, int strsSize, int *returnSize, int **returnColumnSizes){
+    char ***returnStr;
+    int i, j; 
+    int columnSize = 1;
+    int size = 0;
+    StrkeyInfo *keyInfo;
+    int prime[26] = { 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43,
+                      47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101
+                    };
+    returnStr = (char ***)malloc(strsSize * sizeof(char **));
+    *returnColumnSizes = (int *)malloc(strsSize * sizeof(int));
+    keyInfo = (StrkeyInfo *)malloc(strsSize * sizeof(StrkeyInfo));
+    for (i = 0; i < strsSize; i++) {
+        keyInfo[i].key = 1;
+        keyInfo[i].index = i;
+        for (j = 0; j < strlen(strs[i]); j++)
+            keyInfo[i].key *= prime[strs[i][j] - 'a'];
+    }
+    qsort(keyInfo, strsSize, sizeof(StrkeyInfo), comp);
+    for (i = 1; i < strsSize; i++) {
+        if (keyInfo[i - 1].key == keyInfo[i].key) {
+            columnSize++;
+        } else {
+            returnStr[size] = (char **)malloc(columnSize * sizeof(char *));
+            for (j = 0; j < columnSize; j++)
+                returnStr[size][j] = strs[keyInfo[i + j - columnSize].index];
+            (*returnColumnSizes)[size++] = columnSize;
+            columnSize = 1;
+        }
+    }
+    returnStr[size] = (char **)malloc(columnSize * sizeof(char *));
+    for (j = 0; j < columnSize; j++)
+        returnStr[size][j] = strs[keyInfo[i + j - columnSize].index];
+    (*returnColumnSizes)[size++] = columnSize;
+    *returnSize = size;
+    free(keyInfo);
+    return returnStr;
 }
 
 

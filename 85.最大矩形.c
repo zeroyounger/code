@@ -31,8 +31,31 @@
 // @lc code=start
 
 
-int maximalRectangle(char** matrix, int matrixSize, int* matrixColSize){
-
+int maximalRectangle(char ** matrix, int matrixSize, int * matrixColSize){
+    int maxSize = 0;
+    if (matrixSize > 0) {
+        int deep[matrixColSize[0]];
+        for (int i = 0; i < matrixColSize[0]; i++)
+            deep[i] = 0;
+        for (int x = 0; x < matrixSize; x++) {
+            for (int y = 0; y < matrixColSize[0]; y++) {
+                if (matrix[x][y] == '0') {
+                    deep[y] = 0;
+                } else {
+                    deep[y]++;
+                    int now = y;
+                    int high = deep[y];
+                    while (now >= 0 && deep[now] > 0) {
+                        if (deep[now] < high)
+                            high = deep[now];
+                        maxSize = maxSize > (high * (y - now + 1))? maxSize: (high * (y - now + 1));
+                        now--;
+                    }
+                }
+            }
+        }
+    }
+    return maxSize;
 }
 
 

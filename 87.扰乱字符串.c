@@ -72,8 +72,27 @@
 // @lc code=start
 
 
+bool splitStr(char *s1, char *s2, int len){
+	int i;
+	int max = 0;
+	for (i=0; i<len; i++)
+		max = max + s1[i] - s2[i];
+	if (max != 0)
+		return false;
+	if (len == 1 && s1[0] == s2[0])
+		return true;
+	for (i=1; i<len; i++){
+		if (splitStr(s1, s2, i) && splitStr(s1+i, s2+i, (len-i)))
+			return true;
+		if (splitStr(s1, s2+len-i, i) && splitStr(s1+i, s2, (len-i)))
+			return true;
+	}
+	return false;
+}
 bool isScramble(char * s1, char * s2){
-
+	if (strlen(s1) != strlen(s2))
+		return false;
+	return splitStr(s1, s2, strlen(s1));
 }
 
 

@@ -43,7 +43,29 @@
 
 
 bool search(int* nums, int numsSize, int target){
-
+    if(numsSize<=0||(numsSize==1&&nums[0]!=target))
+        return false;
+    int l=0,h=numsSize-1,m;
+    while(l<=h){
+        m=(l+h)/2;
+        if(nums[m]==target)
+            return true;
+        if(nums[m]==nums[l]&&nums[m]==nums[h]){
+            l++;
+            h--;
+        }
+        else if(target>nums[m]){
+            if(nums[m]<=nums[h]&&target>nums[h])
+                h=m-1;
+            else l=m+1;
+        }
+        else if(target<nums[m]){
+            if(nums[m]>=nums[l]&&target<nums[l])
+                l=m+1;
+            else h=m-1;
+        }
+    }
+    return false;
 }
 
 

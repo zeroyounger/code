@@ -45,7 +45,14 @@
 
 
 bool isPalindrome(int x){
-
+    int y = x ;  //用y记住原先值
+    long res=0;  //直接定义为long型，用于存储翻转后的数据，因为int型取值范围内倒转可能会溢出
+    while(x > 0){
+         res = res*10 + x%10;   
+         x = x/10;   
+    }
+    if(res == y) return true;
+    return false;
 }
 
 

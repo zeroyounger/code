@@ -32,9 +32,30 @@
 
 // @lc code=start
 
+int expand(char * s, int l, int r){//以l和r为中心，向外的回文串最大字符数
+    while(l>=0 && r<strlen(s) && s[l]==s[r]){
+        l--;
+        r++;
+    }
+    return r-l-1;
+}
 
 char * longestPalindrome(char * s){
-
+    if (strlen(s)==0) return "";
+    int umax = 1, umid = 0, size=strlen(s);
+    for (int i=0; i<size-1; i++){
+        int temp = fmax(expand(s,i,i+1), expand(s,i,i));//aa是回文串，a也是回文串
+        if ((temp>umax) && temp>1){
+            umid=i;
+            umax=temp;
+        }
+    }
+    int l=umid-(umax-1)/2;
+    int r=umid+umax/2+1;
+    char *ans = (char*)malloc(sizeof(char)*(r-l+1));
+    memset(ans,0,r-l+1);
+    strncpy(ans,s+l,r-l);
+    return ans;
 }
 
 

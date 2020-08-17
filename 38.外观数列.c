@@ -56,8 +56,30 @@
 // @lc code=start
 
 
-char * countAndSay(int n){
-
+#define LEN 5000
+char * countS(char * s){
+    char *s1 = (char *)malloc(LEN);
+    memset(s1, '\0', LEN);
+    int j;
+    int i = 0;
+    int z = 0;
+    while (i < strlen(s)) {
+        j = 1;
+        while (s[i + j] != '\0') {
+            if (s[i + j] == s[i]) j++;
+            else break;
+        }   
+        s1[z++] = '0' + j;
+        s1[z++] = s[i];
+        i += j;
+    }
+    return s1;
+}
+char * countAndSay(int n) {
+    if (n == 1) return "1";
+    char *s = countAndSay(n - 1);
+    char *s1 = countS(s);
+    return s1;
 }
 
 

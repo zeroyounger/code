@@ -35,7 +35,24 @@
 
 
 int minPathSum(int** grid, int gridSize, int* gridColSize){
-
+    int i,j;
+    int sum[gridSize+1][(*gridColSize)+1];
+    memset(sum,0,gridSize*(*gridColSize));
+    if(gridSize == 0 || *gridColSize == 0 )
+        return 0;
+    else if( *gridColSize == 1 && gridSize == 1)
+        return grid[0][0];
+    else{   
+        sum[0][0] = grid[0][0];
+        for( i = 1 ; i < *gridColSize ; i++)
+            sum[0][i]= grid[0][i] +sum[0][i-1];
+        for( i = 1 ; i < gridSize ; i++)
+            sum[i][0] = grid[i][0] + sum[i-1][0];
+        for(i = 1 ; i<gridSize;i++)
+            for(int j = 1;j<(*gridColSize);j++)
+                sum[i][j] = fmin(sum[i][j-1]+grid[i][j],sum[i-1][j]+grid[i][j]);
+    }
+    return sum[gridSize-1][*gridColSize-1];
 }
 
 

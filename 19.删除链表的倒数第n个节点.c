@@ -43,7 +43,22 @@
 
 
 struct ListNode* removeNthFromEnd(struct ListNode* head, int n){
-
+    struct ListNode ** cur = &head; // 第一个指针
+    struct ListNode ** fol = &head; // 间隔为 n 的跟随指针
+    // cur 先走 n 步
+    for (; n > 0; n--)
+        cur = &((*cur)->next);
+    // 两指针同时移动
+    while (*cur) {
+        cur = &((*cur)->next);
+        fol = &((*fol)->next);
+    }
+    // 记录待移除节点
+    struct ListNode * tmp = *fol;
+    // 跨过待移除节点
+    *fol = (*fol)->next;
+    free(tmp);
+    return head;
 }
 
 

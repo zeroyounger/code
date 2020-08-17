@@ -37,8 +37,39 @@
 /**
  * Note: The returned array must be malloced, assume caller calls free().
  */
+int edgeOfLeft(int *nums, int numsSize, int target){
+    int low = 0, high = numsSize, mid;
+    while (low < high){
+        mid = (low + high) / 2;
+        if (nums[mid] == target)
+            high = mid;
+        else if (nums[mid] < target)
+            low = mid + 1;
+        else
+            high = mid;
+    }
+    return low;
+}
 int* searchRange(int* nums, int numsSize, int target, int* returnSize){
-
+    *returnSize = 2;
+    int *res = (int*)malloc(2 * sizeof(int));
+    res[0] = res[1] = -1;
+    int index = edgeOfLeft(nums, numsSize, target);
+    if (index > numsSize - 1)
+        return res;
+    else if (nums[index] != target)
+        return res;
+    else {
+        res[0] = res[1] = index;
+        if (index != numsSize - 1){
+            while (index < numsSize){
+                if (nums[index] == target)
+                    res[1] = index;
+                index++;
+            }
+        }
+    }
+    return res;
 }
 // @lc code=end
 

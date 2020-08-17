@@ -39,9 +39,17 @@
 
 
 struct ListNode* deleteDuplicates(struct ListNode* head){
-
+    struct ListNode *p, *next;
+    p = next = head;
+    while (p!=NULL) {
+        while(next!=NULL && next->val==p->val) {
+            next=next->next;
+        }
+        p->next=next;
+        p=next;
+    }
+    return head;
 }
-
 
 // @lc code=end
 

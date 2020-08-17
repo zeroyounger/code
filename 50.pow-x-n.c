@@ -46,7 +46,19 @@
 
 
 double myPow(double x, int n){
-
+    long int y=n;
+    bool f=false;
+    if(y<0){
+        f=true;
+        y=-y;
+    }
+    double ans=1;
+    while(y){
+        if(y&1) ans*=x;
+        x*=x;
+        y>>=1;
+    }
+    return f?1/ans:ans;
 }
 
 

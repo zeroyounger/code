@@ -67,7 +67,39 @@
 
 
 char * simplifyPath(char * path){
-
+    char * stack = path;
+    int top = -1;
+    int pc = 0;
+    int len = strlen(path);
+    path[len] = '/';
+    for (int i = 0; i <= len; i++) {
+        if (path[i] == '/' && i > 0 && path[i - 1] == '/' )
+            continue;
+        if (path[i] == '/') {
+            if (pc == 1 && top > 0) {
+                top--;
+                pc = 0;
+                continue;
+            }else if (pc == 2 && top > 0) {
+                while (top > 0 && pc > 0)
+                    if (stack[--top] == '/')
+                        pc--;
+                pc = 0;
+                continue;
+            }
+            pc = 0;
+        } else if (path[i] == '.')
+            pc++;
+        else
+            pc = 0;
+        stack[++top] = path[i];
+    }
+    path[len] = 0;
+    if (top > 0)
+        stack[top] = 0;
+    else
+        stack[++top] = 0;
+    return stack;
 }
 
 

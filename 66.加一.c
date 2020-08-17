@@ -42,7 +42,17 @@
  * Note: The returned array must be malloced, assume caller calls free().
  */
 int* plusOne(int* digits, int digitsSize, int* returnSize){
-
+    *returnSize=digitsSize;
+    for(int i=digitsSize-1;i>=0;i--){
+        digits[i]++;
+        digits[i]%=10;
+        if(digits[i]!=0) return digits;
+    }
+    *returnSize=digitsSize+1;
+    digits=(int*)realloc(digits,*returnSize*(sizeof(int)));
+    digits[0]=1;
+    digits[digitsSize]=0;
+    return digits;
 }
 // @lc code=end
 

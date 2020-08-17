@@ -36,8 +36,31 @@
 /**
  * Note: The returned array must be malloced, assume caller calls free().
  */
-char ** letterCombinations(char * digits, int* returnSize){
+#define MAX_NUM 1000
+char* g_phoneKey[] = {"abc", "def", "ghi", "jkl", "mno", "pqrs", "tuv", "wxyz"};
+void dfs(char *digits, char **res, int *returnSize, int index, char *temp, int num){
+    for (int j = 0; j < strlen(g_phoneKey[num - 2]); j++) {
+        temp[index] = g_phoneKey[num -2][j];
+        if (index == strlen(digits) - 1) {
+            res[*returnSize] = (char*)malloc(sizeof(char) * (strlen(digits) + 1));
+            strcpy(res[*returnSize], temp);
+            (*returnSize)++;
+            continue;
+        }
+        dfs(digits, res, returnSize, index + 1, temp, digits[index + 1] - '0');
+    }
+}
 
+char ** letterCombinations(char * digits, int* returnSize){
+    *returnSize = 0;
+    char **res = (char**)malloc(sizeof(char*) * MAX_NUM);
+    if (strcmp(digits, "") == 0)
+        return res;
+    char *temp = (char*)malloc(sizeof(char) * (strlen(digits) + 1));
+    memset(temp, 0, sizeof(char) * (strlen(digits) + 1));
+    int num = digits[0] - '0';
+    dfs(digits, res, returnSize, 0, temp, num);
+    return res;
 }
 // @lc code=end
 

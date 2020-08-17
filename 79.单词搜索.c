@@ -48,8 +48,27 @@
 // @lc code=start
 
 
+int direction[4][2] = {{0, 1}, {-1, 0}, {0, -1}, {1, 0}};
+bool dfs(char **board, int boardSize, int boardColSize, int row, int col, int comb, char *word, int word_len) {
+    if (row < 0 || col < 0 || row >= boardSize || col >= boardColSize)
+        return false;
+    if (board[row][col] != word[comb])
+        return false;
+    if ((++comb) == word_len)
+        return true;
+    board[row][col] = '.';
+    for (int i = 0; i < 4; i++)
+        if (dfs(board, boardSize, boardColSize, row + direction[i][0], col + direction[i][1], comb, word, word_len))
+            return true;
+    board[row][col] = word[comb - 1];
+    return false;
+}
 bool exist(char** board, int boardSize, int* boardColSize, char * word){
-
+    for (int i = 0; i < boardSize; i++)
+        for (int j = 0; j < (*boardColSize); j++)
+            if (dfs(board, boardSize, *boardColSize, i, j, 0, word, strlen(word)))
+                return true;
+    return false;
 }
 
 
