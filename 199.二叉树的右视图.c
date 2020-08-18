@@ -44,8 +44,44 @@
 /**
  * Note: The returned array must be malloced, assume caller calls free().
  */
+#define MAX 1000
 int* rightSideView(struct TreeNode* root, int* returnSize){
-
+    if (root == NULL ) {
+        *returnSize = 0;
+        return NULL;
+    }
+    int *ans = (int *)malloc(sizeof(int) * MAX);
+    int arrIndex = 0;
+    struct TreeNode *queue[MAX];
+    int head = 0;
+    int tail = 0;
+    int size = 0;
+    tail = (tail + 1) % MAX;
+    queue[tail] = root;
+    size++;
+    while (head != tail) {
+        int tmp = size;
+        ans[arrIndex] = queue[tail]->val;
+        arrIndex++;
+        while (tmp > 0) {
+            head = (head + 1) % MAX;
+            struct TreeNode *p = queue[head];
+            size--;
+            if (p->left != NULL) {
+                tail = (tail + 1) % MAX;
+                queue[tail] = p->left;
+                size++;
+            }
+            if (p->right != NULL) {
+                tail = (tail + 1) % MAX;
+                queue[tail] = p->right;
+                size++;
+            }
+            tmp--;
+        }
+    }
+    *returnSize = arrIndex;
+    return ans;
 }
 
 

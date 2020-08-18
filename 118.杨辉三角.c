@@ -42,7 +42,20 @@
  * Note: Both returned array and *columnSizes array must be malloced, assume caller calls free().
  */
 int** generate(int numRows, int* returnSize, int** returnColumnSizes){
-
+    *returnSize = numRows;
+    int **nums = (int**)calloc(numRows,sizeof(int*));
+    *returnColumnSizes = (int*)calloc(numRows,sizeof(int));//returnColumnSizes储存杨辉三角每一行元素的个数
+    
+    for (int i = 0; i < numRows; i++){
+        (*returnColumnSizes)[i] = i+1;
+        nums[i] = (int*)calloc(i+1,sizeof(int));
+        for (int j=0; j<=i; j++)
+            if (j==0 || j==i) 
+                nums[i][j] = 1;
+            else 
+                nums[i][j] = nums[i - 1][j - 1] + nums[i - 1][j];
+    }
+    return nums;
 }
 
 

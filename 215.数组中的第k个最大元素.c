@@ -35,10 +35,20 @@
 // @lc code=start
 
 
-int findKthLargest(int* nums, int numsSize, int k){
-
+int findKthLargest(int *nums, int numsSize, int k){
+    int bucket[20001] = { 0 };
+    for (int i = 0; i < numsSize; i++)
+        bucket[nums[i] + 10000]++;
+    int count= 0, ret = 0;
+    for (int j = 20000; j > 0; j--) {
+        count += bucket[j];
+        if (count >= k) {
+            ret = j - 10000;
+            break;
+        }
+    }
+    return ret;
 }
-
 
 // @lc code=end
 

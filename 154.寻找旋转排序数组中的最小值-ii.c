@@ -43,8 +43,13 @@
 // @lc code=start
 
 
+int cmp(const void * a, const void * b){
+    return *((int *)a) - *((int *)b);
+}
 int findMin(int* nums, int numsSize){
-
+    if (nums == NULL || numsSize == 0) return 0;
+    qsort(nums, numsSize, sizeof(int), cmp);
+    return nums[0];
 }
 
 

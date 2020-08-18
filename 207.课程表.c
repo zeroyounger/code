@@ -49,7 +49,24 @@
 
 
 bool canFinish(int numCourses, int** prerequisites, int prerequisitesSize, int* prerequisitesColSize){
-
+    int a[2000]={0};
+    for(int i=0;i<prerequisitesSize;i++)
+        a[prerequisites[i][0]]++;
+    for(int i=0;i<numCourses;i++){
+        int t=0;
+        for(int j=0;j<prerequisitesSize;j++)
+            if(prerequisites[j][0]!=-1&&a[prerequisites[j][0]]>0&&a[prerequisites[j][1]]==0){
+                a[prerequisites[j][0]]--;
+                prerequisites[j][0]=-1;
+                t=1;
+            }
+        if(t==0)
+            break;
+    }
+    int n=0;
+    for(int i=0;i<numCourses;i++)
+        n+=a[i];
+    return n==0;
 }
 
 

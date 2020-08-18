@@ -38,8 +38,39 @@
  */
 
 
+struct ListNode *reverse(struct ListNode *head){
+    if(head == NULL || head->next == NULL){
+        return head;
+    }else{
+        struct ListNode *newL = reverse(head->next);
+        head->next->next = head;
+        head->next = NULL;
+        return newL;
+    }
+}
+struct ListNode *merge(struct ListNode *l1, struct ListNode *l2){
+    struct ListNode *head = l1;
+    while(l2){
+        struct ListNode *tmpl1 = l1->next;
+        l1->next = l2;
+        struct ListNode *tmpl2 = l2->next;
+        l2->next = tmpl1;
+        l1 = tmpl1;
+        l2 = tmpl2;
+    }
+    return head;
+}
 void reorderList(struct ListNode* head){
-
+    if(head == NULL || head->next == NULL) return;
+    struct ListNode *fast = head;
+    struct ListNode *slow = head;
+    while(fast != NULL && fast->next != NULL){
+        fast = fast->next->next;
+        slow = slow->next;
+    }
+    struct ListNode *rev = reverse(slow->next); // 被翻转的后半部分
+    slow->next = NULL;
+    head = merge(head, rev);
 }
 // @lc code=end
 

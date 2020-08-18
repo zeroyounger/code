@@ -44,9 +44,24 @@
 /**
  * Note: The returned array must be malloced, assume caller calls free().
  */
-int* postorderTraversal(struct TreeNode* root, int* returnSize){
-
+#define MAX 1000
+void postOrder(struct TreeNode* root, int* array, int* returnSize){
+    if(root){
+        postOrder(root->left, array, returnSize);
+        postOrder(root->right, array, returnSize);
+		array[(*returnSize)++] = root->val;
+    }
+	array[*returnSize] = '\0';
 }
+
+int* postorderTraversal(struct TreeNode* root, int* returnSize){
+	*returnSize = 0;
+	int *array = (int*)malloc(sizeof(int) * MAX);
+	postOrder(root, array, returnSize);
+	return array;
+}
+
+
 
 
 // @lc code=end

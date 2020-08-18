@@ -49,7 +49,28 @@
 
 
 int maxPoints(int** points, int pointsSize, int* pointsColSize){
-
+    if(pointsSize<3) return pointsSize;
+    int maxp=2;
+    for(int i=0;i<pointsSize-1;i++){
+        for(int j=i+1;j<pointsSize;j++){
+            int temp=0;
+            long x1=points[i][0],y1=points[i][1];
+            long x2=points[j][0],y2=points[j][1];
+            if(x1==x2&&y1==y2){
+                x2++;
+                y2++;
+            }
+            for(int k=0;k<pointsSize;k++){
+                long x=points[k][0];
+                long y=points[k][1];
+                if(((y-y1)*(x2-x1)==(x-x1)*(y2-y1))){
+                    temp++;
+                }
+            }
+            maxp=fmax(maxp,temp);
+        }
+    }
+    return maxp;
 }
 // @lc code=end
 

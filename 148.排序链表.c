@@ -38,10 +38,27 @@
  */
 
 
-struct ListNode* sortList(struct ListNode* head){
-
+#define MAX_LEN 102400
+int Cmp(const void *a, const void *b){
+    return *(int *)a - *(int *)b;
 }
-
+struct ListNode* sortList(struct ListNode* head){
+    int len = 0;
+    struct ListNode *cur = head;
+    int a[MAX_LEN];
+    while (cur != NULL) {
+        a[len++] = cur->val;
+        cur = cur->next;
+    }
+    qsort(a, len, sizeof(int), Cmp);
+    cur = head;
+    int i = 0;
+    while (cur != NULL) {
+        cur->val = a[i++];
+        cur = cur->next;
+    }
+    return head;
+}
 
 // @lc code=end
 

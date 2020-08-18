@@ -51,10 +51,115 @@
  * The sizes of the arrays are returned as *returnColumnSizes array.
  * Note: Both returned array and *columnSizes array must be malloced, assume caller calls free().
  */
-int** getSkyline(int** buildings, int buildingsSize, int* buildingsColSize, int* returnSize, int** returnColumnSizes){
-
+struct BuildInfo {
+    int left;
+    int right;
+    int height;
+    struct BuildInfo *next;
+};
+static struct BuildInfo g_listHead;
+static struct BuildInfo *GetOneNode(int left, int right, int height){
+    struct BuildInfo *node = (struct BuildInfo *)malloc(sizeof(struct BuildInfo));
+    node->left = left;
+    node->right = right;
+    node->height = height;
+    node->next = NULL;
+    return node;
 }
-
+static void InserNode(int left, int right, int height){
+    struct BuildInfo *cur = g_listHead.next;
+    struct BuildInfo *node = NULL;
+    while (1) {
+        if (height <= cur->height) {
+            if (right <= cur->right) {
+                break;
+            }
+            left = cur->right;
+            cur = cur->next;
+            continue;
+        }
+        if ((left >= cur->right) && (cur->right != -1)) {
+            cur = cur->next;
+            continue;
+        }
+        if (left > cur->left) {
+            node = GetOneNode(left, cur->right, cur->height);
+            node->next = cur->next;
+            cur->next = node;
+            cur->right = left;
+            cur = node;
+            continue;
+        }
+        if ((right < cur->right) || (cur->right == -1)) {
+            node = GetOneNode(right, cur->right, cur->height);
+            node->next = cur->next;
+            cur->next = node;
+            cur->height = height;
+            cur->right = right;
+            break;
+        } 
+        cur->height = height;
+        if (right == cur->right) {
+            break;
+        }
+        left = cur->right;
+        cur = cur->next;
+        continue;    
+    }
+}
+static void OutputRecord(int **out, int *size, int x, int h){
+    if (*size) {
+        if (h == out[*size - 1][1]) {
+            return;
+        }
+    }
+    out[*size] = (int *)malloc(sizeof(int) * 2);
+    out[*size][0] = x;
+    out[*size][1] = h;
+    *size += 1;
+}
+int **getSkyline(int **buildings, int buildingsSize, int *buildingsColSize, int *returnSize,
+                 int **returnColumnSizes){
+    int i, pos;
+    *returnSize = 0;
+    if (buildingsSize == 0) {
+        return NULL;
+    }
+    int **keyPoint = (int **)malloc(buildingsSize * 2 * sizeof(int *));
+    memset(keyPoint, 0, sizeof(keyPoint));
+    struct BuildInfo *node = GetOneNode(buildings[0][1], -1, 0);
+    struct BuildInfo *first = GetOneNode(buildings[0][0], buildings[0][1], buildings[0][2]);
+    first->next = node;
+    g_listHead.next = first;
+    struct BuildInfo *cur = NULL;
+    for (i = 1; i < buildingsSize; i++) {
+        pos = buildings[i][0];
+        cur = g_listHead.next;
+        while (1) {
+            if (cur->right == -1 || pos < cur->right) {
+                break;
+            }
+            OutputRecord(keyPoint, returnSize, cur->left, cur->height);
+            g_listHead.next = cur->next;
+            free(cur);
+            cur = g_listHead.next;
+        }        
+        InserNode(buildings[i][0], buildings[i][1], buildings[i][2]);
+    }
+    cur = g_listHead.next;
+    g_listHead.next = NULL;
+    while (cur) {
+        struct BuildInfo *temp = cur->next;
+        OutputRecord(keyPoint, returnSize, cur->left, cur->height);
+        free(cur);
+        cur = temp;
+    }
+    *returnColumnSizes = (int *)malloc(*returnSize * sizeof(int));
+    for (i = 0; i < *returnSize; i++) {
+        *(*returnColumnSizes + i) = 2;
+    }
+    return keyPoint;
+}
 
 // @lc code=end
 

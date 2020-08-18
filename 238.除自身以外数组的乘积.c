@@ -41,7 +41,37 @@
  * Note: The returned array must be malloced, assume caller calls free().
  */
 int* productExceptSelf(int* nums, int numsSize, int* returnSize){
-
+    if (nums == NULL || numsSize == 0) {
+        returnSize = 0;
+        return NULL;
+    }
+    int arr1[numsSize];
+    int arr2[numsSize];
+    for (int i = 0; i < numsSize; i++) {
+        if (i == 0) {
+            arr1[i] = nums[i];
+            continue;
+        }
+        arr1[i] = arr1[i - 1] * nums[i];
+    }
+    for (int i = numsSize - 1; i >= 0; i--) {
+        if (i == numsSize - 1) {
+            arr2[i] = nums[i];
+            continue;
+        }
+        arr2[i] = arr2[i + 1] * nums[i];
+    }
+    int *out = (int *)calloc(numsSize, sizeof(int));
+    for (int i = 0; i < numsSize; i++) {
+        if (i == 0)
+            out[i] = arr2[i + 1];
+        else if (i == numsSize - 1)
+            out[i] = arr1[i - 1];
+        else
+            out[i] = arr1[i - 1] * arr2[i + 1];
+    }
+    *returnSize = numsSize;
+    return out;
 }
 
 

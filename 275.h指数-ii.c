@@ -48,7 +48,9 @@
 
 
 int hIndex(int* citations, int citationsSize){
-
+    int i;
+    for (i = 0; (i < citationsSize) && (citations[citationsSize - i - 1] >= i+1); ++i);
+    return i;
 }
 
 

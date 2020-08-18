@@ -35,10 +35,35 @@
 /**
  * Note: The returned array must be malloced, assume caller calls free().
  */
-int* majorityElement(int* nums, int numsSize, int* returnSize){
-
+int cmp(const void *a, const void *b){
+    return *(int*)a > *(int*)b;
 }
-
+int* majorityElement(int* nums, int numsSize, int* returnSize){
+if (numsSize == 0) {
+        *returnSize = 0;
+        return NULL;
+    }
+    qsort(nums, numsSize, sizeof(nums[0]), cmp);
+    int *results = (int *)malloc(numsSize * sizeof(int));
+    int i, k, tmp, tmpCount;
+    k = 0;
+    tmp = nums[0];
+    int count = numsSize / 3;
+    for (i = 0; i < numsSize;) {
+        tmpCount = 0;
+        while (i < numsSize && nums[i] == tmp) {
+            tmpCount++;
+            i++;
+        }
+        if (tmpCount > count) {
+            results[k++] = tmp;
+        }
+        if (i < numsSize)
+            tmp = nums[i];
+    }
+    *returnSize = k;
+    return results;
+}
 
 // @lc code=end
 

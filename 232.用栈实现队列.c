@@ -49,40 +49,71 @@
 
 // @lc code=start
 
-
-
-typedef struct {
-
+typedef struct MyQueue_tag {
+  int value; 
+  int count;         /*栈内元素个数*/
+  struct MyQueue_tag *next; /*指向栈的下一个元素*/    
 } MyQueue;
-
-/** Initialize your data structure here. */
-
 MyQueue* myQueueCreate() {
-
+  MyQueue *queue = (MyQueue *)malloc(sizeof(MyQueue));
+  if(NULL == queue)
+  {
+    return NULL;
+  }
+  queue->next = NULL;
+  queue->count = 0;
+  return queue;
 }
-
-/** Push element x to the back of queue. */
 void myQueuePush(MyQueue* obj, int x) {
-
+  MyQueue *srcQueue = NULL;
+  MyQueue *newnode = (MyQueue *)malloc(sizeof(MyQueue));
+  if(NULL == newnode)
+  {
+    return;
+  }
+  srcQueue = obj;
+  while(srcQueue->next != NULL)
+  {
+    srcQueue = srcQueue->next;
+  }
+  newnode->value = x;
+  newnode->next = NULL;
+  srcQueue->next = newnode;
+  obj->count++;
 }
-
-/** Removes the element from in front of queue and returns that element. */
 int myQueuePop(MyQueue* obj) {
-
+  int value = 0;
+  if(obj->count == 0)
+  {
+    return value;
+  }
+  value = obj->next->value;
+  MyQueue *temp = obj->next;
+  obj->next = obj->next->next;
+  obj->count--;
+  if(temp != NULL)
+    free(temp);
+  temp = NULL;
+  return value;
 }
-
-/** Get the front element. */
 int myQueuePeek(MyQueue* obj) {
-
+  int value = 0;
+  if(obj->count == 0)
+  {
+    return value;
+  }
+  value = obj->next->value;
+  return value;
 }
-
-/** Returns whether the queue is empty. */
 bool myQueueEmpty(MyQueue* obj) {
-
+  return (obj->count == 0) ? true : false;
 }
-
 void myQueueFree(MyQueue* obj) {
-
+  if(obj != NULL)
+  {
+    free(obj);
+    obj = NULL;
+  }
 }
 
 /**

@@ -45,7 +45,23 @@
 
 
 int findPeakElement(int* nums, int numsSize){
-
+    int lIdx;
+    int rIdx;
+    int mIdx;
+    if (numsSize == 0)
+        return -1;
+    if (numsSize == 1)
+        return 0;
+    lIdx = 0;
+    rIdx = numsSize - 1;
+    while (rIdx > lIdx) {
+        mIdx = lIdx + ((rIdx - lIdx) / 2);
+        if (nums[mIdx] > nums[mIdx + 1])
+            rIdx = mIdx;
+        else
+            lIdx = mIdx + 1;
+    }
+    return lIdx;
 }
 // @lc code=end
 

@@ -32,8 +32,47 @@
 // @lc code=start
 
 
+int cmp(const void * a, const void* b);
+char str[1600] = {0};
 char * largestNumber(int* nums, int numsSize){
-
+    *str = '\0';
+    char tmp[20] = {0};
+    qsort(nums, numsSize, sizeof(int), cmp);
+    if (nums[numsSize-1] == 0) return "0";
+    while(numsSize != 0) {
+        sprintf(tmp, "%d", nums[--numsSize]);
+        strcat(str, tmp);
+    }
+    return str;
+}
+int cmp(const void * a, const void* b){
+    int num_a, num_b;
+    char *pa;
+    char *pb;
+    char arr_a[20] = {0};
+    char arr_b[20] = {0};
+    num_a = *(int *)a;
+    num_b = *(int *)b;
+    do {
+        arr_a[++arr_a[0]] = num_a % 10;
+        num_a /= 10;
+    }while (num_a != 0);
+    do {
+        arr_b[++arr_b[0]] = num_b % 10;
+        num_b /= 10;
+    }while (num_b != 0);
+    pa = &arr_a[arr_a[0]];
+    pb = &arr_b[arr_b[0]];
+    while (*(pa) == *(pb)) {
+        pa--;
+        pb--;
+        if (pa == arr_a) pa = &arr_b[arr_b[0]];
+        if (pb == arr_b) pb = &arr_a[arr_a[0]];
+        if (pa == arr_b) break;
+    }
+    if (pa == arr_b) return 0;
+    if (*pa < *pb) return -1;
+    else return 1;
 }
 
 

@@ -41,8 +41,16 @@
  */
 
 // @lc code=start
-bool searchMatrix(int** matrix, int matrixRowSize, int matrixColSize, int target) {
-    
+bool searchMatrix(int** matrix, int matrixRowSize, int matrixColSize, int target){
+    int i= 0 ,j = 0;
+    if(matrixRowSize == 0 ||matrixColSize == 0) return false;
+    if(target>matrix[matrixRowSize-1][matrixColSize-1] || target<matrix[0][0]) return false;
+    while (i<matrixRowSize && j<matrixColSize){
+        if(matrix[matrixRowSize-1-i][j]==target) return true;
+        if(matrix[matrixRowSize-1-i][j]>target) i++;
+        else j++;
+    }
+    return false;
 }
 // @lc code=end
 

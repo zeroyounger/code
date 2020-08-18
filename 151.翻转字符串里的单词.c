@@ -59,9 +59,43 @@
 
 
 char * reverseWords(char * s){
-
+    int i = 0;
+    int len = 0;
+    int subLen = 0;
+    int begin = 0;
+    int end = 0;
+    bool first = false;
+    char *ret = NULL;
+    char *temp = NULL;
+    len = strlen(s);
+    ret = (char *)malloc(sizeof(char) * (len+1));
+    temp = ret;
+    for (i = len -1; i >=0; i--){
+        if (s[i] != ' ' && first == false){
+            end = i+1;
+            first = true;
+        }else if (s[i] == ' ' && end > 0){
+            begin = i+1;
+            first = false;
+        }
+        if (s[i] != ' ' && i == 0){
+            begin = 0;
+            first = false;
+        }
+        if (first == false && end - begin > 0){
+            subLen = end - begin;
+            if (temp != ret){
+                *temp++= ' ';
+            }
+            memcpy(temp, &s[begin], subLen);
+            temp += subLen;
+            end = 0;
+            begin = 0;
+        }
+    }
+    *temp++= '\0';
+    return ret;
 }
-
 
 // @lc code=end
 

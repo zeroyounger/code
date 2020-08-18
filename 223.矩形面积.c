@@ -32,9 +32,16 @@
 
 
 int computeArea(int A, int B, int C, int D, int E, int F, int G, int H){
-
+    int area1 = (D - B) * (C - A);
+    int area2 = (G - E) * (H - F);
+    int up = fmin(D, H);
+    int dow = fmax(B, F);
+    int left = fmax(A, E);
+    int right = fmin(C, G); 
+    if ((up < dow) || (left > right))
+        return area1 + area2;
+    return area1 - (up - dow) * (right - left) + area2;
 }
-
 
 // @lc code=end
 

@@ -39,34 +39,50 @@
 // @lc code=start
 
 
-
-typedef struct {
-    
-} Trie;
-
-/** Initialize your data structure here. */
-
+struct TrieNode{
+    bool isEnd;
+    struct TrieNode* map[26];
+};
+typedef struct TrieNode Trie;
 Trie* trieCreate() {
-    
+    Trie* obj = (Trie*)malloc(sizeof(Trie));
+    obj->isEnd = false;
+    for(int i = 0; i < 26; i++)
+	    obj->map[i] = NULL;
+    return obj;
 }
-
-/** Inserts a word into the trie. */
 void trieInsert(Trie* obj, char * word) {
-  
+    while(*word){
+        if(obj->map[*word-'a'] == NULL)
+            obj->map[*word-'a'] = trieCreate();
+        obj = obj->map[*word-'a'];
+        word++;
+    }
+    obj->isEnd = true;
 }
-
-/** Returns if the word is in the trie. */
 bool trieSearch(Trie* obj, char * word) {
-  
+    while(*word){
+        if(obj->map[*word-'a'] == NULL)
+            return false;
+        obj = obj->map[*word-'a'];
+        word++;
+    }
+    return obj->isEnd;
 }
-
-/** Returns if there is any word in the trie that starts with the given prefix. */
 bool trieStartsWith(Trie* obj, char * prefix) {
-  
+    while(*prefix){
+        if(obj->map[*prefix-'a'] == NULL)
+	        return false;
+        obj = obj->map[*prefix-'a'];
+        prefix++;
+    }
+    return true;
 }
-
 void trieFree(Trie* obj) {
-    
+    for(int i = 0; i < 26; i++)
+        if(obj->map[i] != NULL)
+	        trieFree(obj->map[i]);
+    free(obj);
 }
 
 /**

@@ -48,9 +48,18 @@
 
 
 int maxProfit(int* prices, int pricesSize){
-
+    int fstBuy = -INT_MAX;
+    int fstSell = 0;
+    int secBuy = -INT_MAX;
+    int secSell = 0;
+    for (int i = 0; i < pricesSize; ++i) {
+        fstBuy = fmax(fstBuy, -prices[i]);
+        fstSell = fmax(fstSell, fstBuy + prices[i]);
+        secBuy = fmax(secBuy, fstSell - prices[i]);
+        secSell = fmax(secSell, secBuy + prices[i]);
+    }
+    return secSell;
 }
-
 
 // @lc code=end
 

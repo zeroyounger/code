@@ -63,7 +63,15 @@
  * };
  */
 bool hasCycle(struct ListNode *head) {
-    
+    if(head == NULL || head->next == NULL) return false;
+    struct ListNode *pre, *p;
+    pre = head; p = head->next;
+    while(p&&p->next){
+        if(pre==p) return true;
+        pre = pre->next;
+        p = p->next->next;
+    }
+    return false;
 }
 // @lc code=end
 

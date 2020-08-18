@@ -60,7 +60,30 @@
  * Note: The returned array must be malloced, assume caller calls free().
  */
 int* maxSlidingWindow(int* nums, int numsSize, int k, int* returnSize){
-
+    if (numsSize == 0) {
+        *returnSize = 0;
+        int tmp[0];
+        return tmp;
+    }
+    int *response  = (int *)malloc(sizeof(int) * (numsSize-k+1));
+    int i,j,max,index=-1;
+    for (i=0; i<numsSize-k+1; i++) {
+        if (i > 0 && nums[i-1] < max) {
+            if (nums[i+k-1] > max) {
+                max = nums[i+k-1];
+            }
+        } else {
+            max = nums[i];
+            for (j=1; j<k; j++) {
+                if (nums[i+j] > max) {
+                    max = nums[i+j];
+                }
+            }
+        }
+        response[++index] = max;
+    }
+    *returnSize = index + 1;
+    return response;
 }
 // @lc code=end
 

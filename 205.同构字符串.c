@@ -43,8 +43,15 @@
 // @lc code=start
 
 
-bool isIsomorphic(char * s, char * t){
-
+bool isIsomorphic(char * s, char * t){        
+    int a[128]={0};
+    int b[128]={0};
+    for(int i = 0; s[i]; ++i) {
+        a[s[i]] += i+1;
+        b[t[i]] += i+1;
+        if(a[s[i]] != b[t[i]]) return false;
+    }
+    return true;
 }
 
 

@@ -61,8 +61,21 @@
  */
 
 
+void helper(struct TreeNode* root, int father, int*p){
+    int current=root->val;
+    current+=10*father;
+    if(!root->left&&!root->right){
+        *p+=current;
+        return;
+    }
+    if(root->left) helper(root->left,current,p);
+    if(root->right) helper(root->right,current,p);
+}
 int sumNumbers(struct TreeNode* root){
-
+    if(!root) return 0;
+    int res=0,*p=&res;
+    helper(root,0,p);
+    return res;
 }
 
 

@@ -56,7 +56,7 @@
 
 // @lc code=start
 int hammingWeight(uint32_t n) {
-    
+    return (n > 0) ? 1 + hammingWeight(n & (n - 1)) : 0;
 }
 // @lc code=end
 

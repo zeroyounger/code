@@ -60,8 +60,72 @@
 /**
  * Note: The returned array must be malloced, assume caller calls free().
  */
-int* findOrder(int numCourses, int** prerequisites, int prerequisitesSize, int* prerequisitesColSize, int* returnSize){
+#define MAX_SIZE 10000
+typedef struct Node {
+    int key;
+    struct Node *next;
+}NODE;
 
+typedef struct Topo {
+    int preNum;
+    struct Node *second; 
+}TOPO;
+
+int* findOrder(int numCourses, int **prerequisites, int prerequisitesSize, int* prerequisitesColSize, int* returnSize){
+    int *result = (int *)malloc(numCourses * sizeof(int));
+    int i, j, start, end;
+    struct Topo *topo = (TOPO *)malloc(numCourses * sizeof(TOPO));
+    struct Node *tmp = NULL;
+    int stack[MAX_SIZE] = {0};
+    int count = 0;
+    int tmpNum;
+    int resultCount = 0;
+    int total = 0;
+    memset(topo, 0, numCourses * sizeof(TOPO));
+    for (i = 0; i < prerequisitesSize; i++) {
+        start = prerequisites[i][1];
+        end = prerequisites[i][0];
+        tmp = (NODE *)malloc(sizeof(NODE));
+        topo[end].preNum++;
+        if (topo[start].second == NULL) {
+            tmp->key = end;
+            tmp->next = NULL;
+            topo[start].second = tmp;
+        } else {
+            tmp->key = end;
+            tmp->next = topo[start].second;
+            topo[start].second = tmp;
+        }
+    }
+
+    for (i = 0; i < numCourses; i++) {
+        if (topo[i].preNum == 0) {
+            stack[count++] = i;
+            total++;
+        }
+    }
+
+    while (count > 0) {
+        tmpNum = stack[--count];
+        result[resultCount++] = tmpNum;
+        tmp = topo[tmpNum].second;
+        while(tmp != NULL) {
+            topo[tmp->key].preNum--;
+            if (topo[tmp->key].preNum == 0) {
+                stack[count++] = tmp->key;
+                total++;
+            }
+            tmp = tmp->next;
+        }
+        topo[tmpNum].second = tmp;
+    }
+    
+    if (total < numCourses) {
+        *returnSize = 0;
+        return NULL;
+    }
+    *returnSize = numCourses;
+    return result;
 }
 
 

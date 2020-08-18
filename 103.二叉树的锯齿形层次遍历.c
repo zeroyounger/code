@@ -53,7 +53,31 @@
  * Note: Both returned array and *columnSizes array must be malloced, assume caller calls free().
  */
 int** zigzagLevelOrder(struct TreeNode* root, int* returnSize, int** returnColumnSizes){
-
+    struct TreeNode* queue[10000];
+    int head = 0, tail = 0;
+    struct TreeNode* p;
+    int **ans;
+    ans = (int **)malloc(sizeof(int *) * 100);
+    *returnColumnSizes = (int *)malloc(sizeof(int) * 100);
+    *returnSize = 0;
+    if (!root) return ans;
+    queue[tail++] = root;
+    int flag = 1;
+    int count = 0;
+    while (tail > head) {
+        (*returnColumnSizes)[*returnSize] = tail - head;
+        ans[*returnSize] = (int *)malloc(sizeof(int) * (tail - head));
+        for (int i = 0; i < (*returnColumnSizes)[*returnSize]; i++) {
+            p = queue[head++];
+            if (flag) ans[*returnSize][i] = p -> val;
+            else ans[*returnSize][(*returnColumnSizes)[*returnSize] - i - 1] = p -> val;
+            if (p -> left) queue[tail++] = p -> left;
+            if (p -> right) queue[tail++] = p -> right;
+        }
+        *returnSize += 1;
+        flag = 1 - flag;
+    }
+    return ans;
 }
 
 

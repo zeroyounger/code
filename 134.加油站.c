@@ -66,9 +66,40 @@
 
 
 int canCompleteCircuit(int* gas, int gasSize, int* cost, int costSize){
-
+    int i=0;
+    int start_i=0;
+    int end_num=0;
+    for(i=0;i<gasSize;i++){
+        if(gas[i]>=cost[i]){
+            //一旦大于，可以开始
+            start_i=i;
+            end_num=circle(start_i,gasSize,gas,cost);
+            if(end_num==i){
+                return end_num;
+            }
+        }
+    }
+    return -1;
 }
-
+int circle(int a,int gasSize,int* gas,int* cost){
+    int save_a=a;
+    int save_gasSize=gasSize;
+    int save=0;
+    while(gasSize){
+        if(a<save_gasSize-1){//当索引在之前时,因为gasSize一直在变，所以要先存起来
+            save=gas[a]-cost[a]+save;
+            a=a+1;
+        }else{//当它的索引刚好在gasSize-1时
+            save=gas[a]-cost[a]+save;
+            a=0;
+        }
+        if(save<0){
+            return -1;
+        }
+        gasSize--;
+    }
+    return save_a;   
+}
 
 // @lc code=end
 

@@ -61,8 +61,31 @@
 // @lc code=start
 
 
-void gameOfLife(int** board, int boardSize, int* boardColSize){
-
+void gameOfLife(int** board, int boardSize, int* boardColSize){    
+    int m = boardSize;
+    int n = *boardColSize;
+    int sum = 0;
+    int midArr[m+2][n+2];
+    for(int i = 0; i < (m +2); i++)
+        for(int j = 0; j < (n+2);j++)
+            midArr[i][j] = 0;
+    for(int i = 0; i < m; i++)
+        for(int j = 0; j < n;j++)
+            midArr[i + 1][j + 1] = board[i][j];
+    for(int i = 0; i < m; i++) {
+        for(int j = 0; j < n; j++) {
+            int x = i + 1;
+            int y = j + 1;
+            sum = midArr[x - 1][y] + midArr[x + 1][y] + midArr[x][y - 1] 
+            + midArr[x][y + 1] + midArr[x - 1][y - 1] + midArr[x + 1][y + 1] 
+            + midArr[x + 1][y - 1] + midArr[x - 1][y + 1];
+            if((sum == 3) || ((board[i][j] == 1) && (sum == 2))) {
+                board[i][j] = 1;
+            } else {
+                board[i][j] = 0;
+            }
+        }
+    }
 }
 // @lc code=end
 

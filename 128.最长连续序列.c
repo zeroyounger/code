@@ -28,8 +28,28 @@
 // @lc code=start
 
 
+int cmp(const void *a, const void *b) {
+    int x=*(int *)a;
+    int y=*(int *)b;
+    if (x>y) return 1;
+    if (x<y) return -1;
+    return 0;
+}
 int longestConsecutive(int* nums, int numsSize){
-
+    if (numsSize <= 1) return numsSize;
+    qsort(nums, numsSize, sizeof(nums[0]), cmp);
+    int max=1,cur=1;
+    for(int i=0;i!=numsSize-1;i++){
+        if(nums[i]+1==nums[i+1]){
+            cur++;
+            if(max<cur) max=cur;
+            continue;
+        }
+        if(nums[i]==nums[i+1])
+            continue;
+        cur=1;
+    }
+    return max;
 }
 
 

@@ -43,8 +43,31 @@
 // @lc code=start
 
 
-void solve(char** board, int boardSize, int* boardColSize){
-
+void Dfs(char** board, int boardSize, int colSize, int x, int y){
+    if ((x < 0 || x > boardSize-1 || y < 0 || y > colSize - 1) || board[x][y] != 'O')
+        return;
+    board[x][y] = 'B';
+    Dfs(board, boardSize, colSize, x + 1, y);
+    Dfs(board, boardSize, colSize, x, y + 1);
+    Dfs(board, boardSize, colSize, x - 1, y);
+    Dfs(board, boardSize, colSize, x, y -1);
+    return;
+}
+void solve(char** board, int boardSize, int* boardColSize) {
+    if (board == NULL || boardSize < 1 || boardColSize == NULL) return;
+    for (int i = 0; i < boardSize; ++i)
+        for (int j = 0; j < boardColSize[i]; j++)
+            if ((i == 0 || i == boardSize - 1 || j == 0 || j == boardColSize[i] - 1) && board[i][j] == 'O')
+                Dfs(board, boardSize, boardColSize[i], i, j);
+    for (int i = 0; i < boardSize; ++i) {
+        for (int j = 0; j < boardColSize[i]; j++) {
+            if (board[i][j] == 'O')
+                board[i][j] = 'X';
+            else  if (board[i][j] == 'B')
+                board[i][j] = 'O';
+        }
+    }
+    return;
 }
 // @lc code=end
 

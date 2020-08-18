@@ -36,7 +36,23 @@
 
 
 int maxProduct(int* nums, int numsSize){
-
+	int i, j, sum, max;
+	i = 0; sum = 1; max = INT_MIN;
+	for(j = 0; j <= numsSize; j++){
+		if(j == numsSize || nums[j] == 0){
+			max = fmax(max, j < numsSize ? 0 : max);
+			while(sum < 0 && i < j - 1){
+				sum /= nums[i++];
+				max = fmax(max, sum);
+			}
+			sum = 1;
+			i = j + 1;
+		}else{
+			sum *= nums[j];
+			max = fmax(max, sum);
+		}
+	}	
+	return max;
 }
 // @lc code=end
 

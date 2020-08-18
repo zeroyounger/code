@@ -51,8 +51,48 @@
 /**
  * Note: The returned array must be malloced, assume caller calls free().
  */
-char ** addOperators(char * num, int target, int* returnSize){
-
+void helper(char* num, int len, int start, int target, long long sum, long long pre, char* stack, int top, char*** arr, int* returnSize){
+    if(start == len){
+        if(target == sum){
+            stack[++top] = '\0';
+            *returnSize += 1; 
+            *arr = (char**)realloc(*arr, sizeof(char*)*(*returnSize));
+            (*arr)[*returnSize-1] = (char*)malloc(sizeof(char)*(top+1));
+            for(int i = 0; i <= top; i++)
+                (*arr)[*returnSize-1][i] = stack[i];
+        }
+        return ; 
+    }
+    long long val = 0;
+    int index = top+1;
+    for(int i = start; i < len; i++){
+        val = 10*val + num[i] - '0';
+        if(start == 0){
+            stack[top+1] = num[i];
+            helper(num, len, i+1, target, val, val, stack, top+1, arr, returnSize);
+        }
+        else{
+            stack[top+2] = num[i];
+            stack[index] = '-';
+            helper(num, len, i+1, target, sum-val, -1*val, stack, top+2, arr, returnSize);
+            stack[index] = '+';
+            helper(num, len, i+1, target, sum+val, val, stack, top+2, arr, returnSize);
+            stack[index] = '*';
+            helper(num, len, i+1, target, sum-pre+pre*val, pre*val, stack, top+2, arr, returnSize);
+        }
+        if(num[start] == '0') break;
+        top++;
+    }
+}
+char** addOperators(char* num, int target, int* returnSize){
+    char** arr = (char**)malloc(sizeof(char*));
+    *returnSize = 0;
+    int len = strlen(num);
+    if(len == 0) return arr;
+    char* stack = (char*)malloc(sizeof(char)*2*len);
+    int top = -1;
+    helper(num, len, 0, target, 0, 0, stack, top, &arr, returnSize);
+    return arr;
 }
 // @lc code=end
 

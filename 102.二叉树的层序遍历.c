@@ -54,8 +54,36 @@
  * The sizes of the arrays are returned as *returnColumnSizes array.
  * Note: Both returned array and *columnSizes array must be malloced, assume caller calls free().
  */
+void bfs(struct TreeNode* root, int* returnSize, int* returnColumnSizes, int **retVal){
+    struct TreeNode* queue[10000] = {0};
+    int front, back;
+    struct TreeNode* cur;
+    front = back = 0;
+    queue[back++] = root;
+    while (front < back) {
+        int cnt = back - front;
+        returnColumnSizes[*returnSize] = cnt;
+        retVal[*returnSize] = malloc(sizeof(int) * 10240);
+        for (int i = 0; i < cnt; i++) {
+            cur = queue[front++];
+            retVal[*returnSize][i] = cur->val;
+            if (cur->left)
+                queue[back++] = cur->left;
+            if (cur->right)
+                queue[back++] = cur->right;
+        }
+        (*returnSize)++;
+    }
+    return;
+}
 int** levelOrder(struct TreeNode* root, int* returnSize, int** returnColumnSizes){
-
+    int **retVal = (int *)malloc(sizeof(int) * 10240);
+    *returnColumnSizes = (int *)malloc(sizeof(int) * 10240);
+    *returnSize = 0;
+    if (root == NULL)
+        return NULL;
+    bfs(root, returnSize, *returnColumnSizes, retVal);
+    return retVal;
 }
 
 

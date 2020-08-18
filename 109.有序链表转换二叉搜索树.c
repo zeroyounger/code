@@ -50,8 +50,21 @@
  */
 
 
+struct TreeNode* fun(struct ListNode *left,struct ListNode *right){
+    if(left==right)return NULL;
+    struct ListNode *slow=left,*fast=left;
+    while(fast!=right&&fast->next!=right){
+        slow=slow->next;
+        fast=fast->next->next;
+    }
+    struct TreeNode *root=(struct TreeNode *)malloc(sizeof(struct TreeNode));
+    root->val=slow->val;
+    root->left=fun(left,slow);
+    root->right=fun(slow->next,right);
+    return root;
+}
 struct TreeNode* sortedListToBST(struct ListNode* head){
-
+    return fun(head,NULL);
 }
 // @lc code=end
 

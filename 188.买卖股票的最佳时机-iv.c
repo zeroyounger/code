@@ -41,7 +41,27 @@
 
 
 int maxProfit(int k, int* prices, int pricesSize){
-
+    if(pricesSize<2||k<1) return 0;
+    int N=pricesSize;
+    if(k>=N/2){
+        int res=0;
+        for (int i = 1; i < N; ++i)
+            if (prices[i] > prices[i - 1])
+                res += prices[i] - prices[i - 1];
+        return res;
+    }
+    int dp[k+1][2];
+    for(int i=0;i!=k+1;i++){
+        dp[i][0]=0;
+        dp[i][1]=INT_MIN;
+    }
+    for (int i = 0; i < N; ++i) {
+        for (int j = k; j > 0; --j) {
+            dp[j][0] = fmax(dp[j][0], dp[j][1] + prices[i]);
+            dp[j][1] = fmax(dp[j][1], dp[j - 1][0] - prices[i]);
+        }
+    }
+    return dp[k][0];
 }
 
 

@@ -56,8 +56,19 @@
  */
 
 
+void inOrder(struct TreeNode* root, int* curr, int k, int* val){
+    if(!root) return;
+    inOrder(root->left, curr, k, val);
+    (*curr)++;
+    if(*curr==k)
+        *val=root->val;
+    inOrder(root->right,curr,k,val);
+}
 int kthSmallest(struct TreeNode* root, int k){
-
+    int val=0;
+    int curr=0;
+    inOrder(root,&curr,k,&val);
+    return val;
 }
 // @lc code=end
 

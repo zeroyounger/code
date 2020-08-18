@@ -35,10 +35,28 @@
 // @lc code=start
 
 
-int nthUglyNumber(int n){
-
+int min(int a, int b, int c){
+	int min=a;
+	if(b<min) min=b;
+	if(c<min) min=c;
+	return min;
 }
 
+int nthUglyNumber(int n){
+    int i = 0;
+    int ret = 1;
+    int t2=0, t3=0, t5=0;
+    int tmp[2048] = {0};
+    tmp[0] = 1;
+    for(i=1; i<n; i++) {
+        ret = min(tmp[t2]*2, tmp[t3]*3, tmp[t5]*5);
+        if(ret == tmp[t2]*2) t2++;
+        if(ret == tmp[t3]*3) t3++;
+        if(ret == tmp[t5]*5) t5++;
+        tmp[i] = ret;
+    }
+    return ret;
+}
 
 // @lc code=end
 

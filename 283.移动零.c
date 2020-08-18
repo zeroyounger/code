@@ -33,7 +33,16 @@
 
 
 void moveZeroes(int* nums, int numsSize){
-
+	if(numsSize==0) return;
+	int* des=(int*)malloc(numsSize*sizeof(int));
+	memset(des,0,sizeof(int)*numsSize);
+	int j=0;
+	for(int i=0;i<numsSize;i++){
+		if(nums[i]!=0)
+			des[j++]=nums[i];
+	}
+	memcpy(nums,des,sizeof(int)*numsSize);
+	free(des);
 }
 // @lc code=end
 

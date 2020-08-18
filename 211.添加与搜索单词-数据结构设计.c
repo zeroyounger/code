@@ -66,29 +66,63 @@
 // @lc code=start
 
 
-
+#define WORD_NUM 26
 typedef struct {
-    
+    int end;
+    struct WordDictionary *childList[WORD_NUM];
 } WordDictionary;
-
-/** Initialize your data structure here. */
-
 WordDictionary* wordDictionaryCreate() {
-    
+    int i;
+    WordDictionary *root = NULL;
+    root = (WordDictionary *)malloc(sizeof(WordDictionary));
+    if (root == NULL)
+        return NULL;
+    for (i = 0; i < WORD_NUM; i++)
+        root->childList[i] = NULL;
+    root->end = 0;
+    return root;
 }
-
-/** Adds a word into the data structure. */
 void wordDictionaryAddWord(WordDictionary* obj, char * word) {
-  
+    char *p = word;
+    WordDictionary *node = obj;
+    while (*p != '\0') {
+        if (node->childList[*p - 'a'] == NULL)
+            node->childList[*p - 'a'] = wordDictionaryCreate();
+        node = node->childList[*p - 'a'];
+        p++;
+    }
+    node->end = 1;
 }
-
-/** Returns if the word is in the data structure. A word could contain the dot character '.' to represent any one letter. */
 bool wordDictionarySearch(WordDictionary* obj, char * word) {
-  
+    int i;
+    int j;
+    char *p = word;
+    WordDictionary *node = obj;
+    if (node == NULL)
+        return false;
+    while (*p != '\0' && node != NULL) {
+        if (*p == '.') {
+            for (i = 0; i < WORD_NUM; i++)
+                if (wordDictionarySearch(node->childList[i], p + 1))
+                    return true;
+            return false;
+        } else if (node->childList[*p - 'a'] == NULL) {
+            return false;
+        }
+        node = node->childList[*p - 'a'];
+        p++;
+    }
+    if (node != NULL && node->end == 1)
+        return true;
+    return false;
 }
-
 void wordDictionaryFree(WordDictionary* obj) {
-    
+    int i;
+    if (obj == NULL)
+        return;
+    for (i = 0; i < WORD_NUM; i++) 
+        wordDictionaryFree(obj->childList[i]);
+    free(obj);
 }
 
 /**

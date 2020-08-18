@@ -51,8 +51,80 @@
 /**
  * Note: The returned array must be malloced, assume caller calls free().
  */
+typedef struct tagNode Node;
+struct tagNode {
+    Node *child[26];
+    bool end;
+    char *word;
+};
+Node *TrieInit(void){
+    Node *root = calloc(1, sizeof(Node));
+    return root;
+}
+void TrieInsert(Node *root, char *word){
+    char *c;
+    Node *parent = root;
+    for (c = word; *c != 0; c++) {
+        if (parent->child[*c-'a'] == NULL) {
+            parent->child[*c-'a'] = calloc(1, sizeof(Node));
+        }
+        parent = parent->child[*c-'a'];
+    }
+    parent->end = true;
+    parent->word = strdup(word);
+    return;
+}
+void Dfs(Node *node, char **board, int maxRow, int maxCol, int row, int col, char **ret, int *retSize){
+    int idx;
+    char ori;
+    Node *child = NULL;
+    if (row >= maxRow || row < 0 || col < 0 || col >= maxCol || board[row][col] == '#') {
+        return;
+    }
+    idx = board[row][col] - 'a';
+    child = node->child[idx];
+    if (child == NULL) {
+        return;
+    }
+    if (child->end) {
+        child->end = false;
+        ret[*retSize] = strdup(child->word);
+        (*retSize)++;
+    }
+    ori = board[row][col];
+    board[row][col] = '#';
+    Dfs(child, board, maxRow, maxCol, row + 1, col, ret, retSize);
+    Dfs(child, board, maxRow, maxCol, row - 1, col, ret, retSize);
+    Dfs(child, board, maxRow, maxCol, row, col + 1, ret, retSize);
+    Dfs(child, board, maxRow, maxCol, row, col - 1, ret, retSize);
+    board[row][col] = ori;
+    return;
+}
+void TrieSearch(Node *root, char **board, int row, int col, char **ret, int *retSize){
+    int i, j;
+    Node *node = root;
+    for (i = 0; i < row; i++) {
+        for (j = 0; j < col; j++) {
+            Dfs(node, board, row, col, i, j, ret, retSize);
+        }
+    }
+    return;
+}
 char ** findWords(char** board, int boardSize, int* boardColSize, char ** words, int wordsSize, int* returnSize){
-
+    int i;
+    Node *Trie = NULL;
+    char **ret = NULL;
+    *returnSize = 0;
+    if (wordsSize == 0 || boardSize == 0 || *boardColSize == 0) {
+        return NULL;
+    }
+    Trie = TrieInit();
+    for (i = 0; i < wordsSize; i++) {
+        TrieInsert(Trie, words[i]);
+    }
+    ret = calloc(wordsSize, sizeof(char*));
+    TrieSearch(Trie, board, boardSize, *boardColSize, ret, returnSize);
+    return ret;
 }
 
 

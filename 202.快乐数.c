@@ -38,10 +38,25 @@
 // @lc code=start
 
 
-bool isHappy(int n){
-
+int step(int n){
+    int sum = 0;
+    while(n > 0){
+        int bit=n%10;
+        sum+=bit*bit;
+        n/=10;
+    }
+    return sum;
 }
 
+bool isHappy(int n){
+    int slow=n, fast=n;
+    do{
+        slow=step(slow);
+        fast=step(fast);
+        fast=step(fast);
+    }while(slow!=fast);
+    return slow==1;
+}
 
 // @lc code=end
 

@@ -35,7 +35,28 @@
 
 
 bool isPalindrome(char * s){
-
+    int len = strlen(s);
+    if (len == 0)
+        return true;
+    int left = 0;
+    int right = len - 1;
+    while (left < right) {
+        if (isalnum(s[left]) == false) {
+            left++;
+            continue;
+        }
+        if (isalnum(s[right]) == false) {
+            right--;
+            continue;
+        }
+        if(toupper(s[left]) == toupper(s[right])) {
+            left++;
+            right--;
+            continue;
+        }
+        return false;
+    }
+    return true;
 }
 // @lc code=end
 

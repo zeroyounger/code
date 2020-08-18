@@ -37,8 +37,23 @@
 // @lc code=start
 
 
-int rob(int* nums, int numsSize){
-
+int dp(int *nums, int begin, int end){
+    int length = end - begin + 1;
+    if (begin == end) return nums[begin];
+    int dp[length];
+    dp[0] = nums[begin];
+    dp[1] = nums[begin] > nums[begin + 1] ? nums[begin] : nums[begin + 1];
+    for (int i = 2; i < length; ++i)
+        dp[i] = fmax(dp[i - 1], dp[i - 2] + nums[begin + i]);
+    return dp[length - 1];
+}
+int rob(int *nums, int numsSize){
+    if(numsSize == 0) return 0;
+    if(numsSize == 1) return nums[0];
+    int a = dp(nums, 1, numsSize - 1);
+    int b = dp(nums, 0, numsSize - 2);
+    if (a > b) return a;
+    else return b;
 }
 
 

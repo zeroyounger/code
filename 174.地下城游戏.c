@@ -76,7 +76,18 @@
 
 
 int calculateMinimumHP(int** dungeon, int dungeonSize, int* dungeonColSize){
-
+    int col = *dungeonColSize;
+    int row = dungeonSize;
+    int i,j,result;
+    dungeon[row-1][col-1] = fmax(1,1-dungeon[row-1][col-1]);
+    for (i = col-2;i >= 0; i--)
+        dungeon[row-1][i] = fmax(1, dungeon[row-1][i+1] - dungeon[row-1][i]);
+    for (j = row-2; j >= 0; j--)
+        dungeon[j][col-1] = fmax(1, dungeon[j+1][col-1] - dungeon[j][col-1]);
+    for (i = row-2;i >=0 ; i--)
+        for (j = col-2; j >= 0; j--)
+            dungeon[i][j] =fmax(1, fmin(dungeon[i+1][j], dungeon[i][j+1]) - dungeon[i][j]);
+    return dungeon[0][0];
 }
 
 

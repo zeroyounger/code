@@ -49,12 +49,10 @@
  */
 /** Encodes a tree to a single string. */
 char* serialize(struct TreeNode* root) {
-    
+    return  (char *)root;
 }
-
-/** Decodes your encoded data to tree. */
 struct TreeNode* deserialize(char* data) {
-    
+    return (struct TreeNode *)data;
 }
 
 // Your functions will be called as such:

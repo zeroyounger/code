@@ -28,7 +28,17 @@
 
 
 int countPrimes(int n){
-
+    if(n<3) return 0;
+    bool *isPrime=(bool*)calloc(n+1, sizeof(bool));
+	int count=0;
+	for(int i=2;i!=n;++i){
+		if(!isPrime[i]){
+			count++;
+			for(int j=i+i;j<n;j+=i)
+				isPrime[j]=true;
+		}
+	}
+	return count;
 }
 
 

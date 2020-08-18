@@ -42,7 +42,14 @@
 
 
 int maxProfit(int* prices, int pricesSize){
-
+    if(pricesSize <= 1)
+        return 0;
+    int in = prices[0], res = 0;
+    for(int i = 1; i < pricesSize; i++) {
+        res = fmax(res, prices[i] - in);
+        in = fmin(in, prices[i]);
+    }
+    return res;
 }
 
 

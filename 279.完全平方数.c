@@ -32,10 +32,25 @@
 // @lc code=start
 
 
-int numSquares(int n){
-
+int isSquares(int n){
+    int num = (int)sqrt(n);
+    return num*num==n;
 }
-
+int numSquares(int n){
+    int j;
+    int max;
+    while(n%4==0)
+        n /= 4;
+    if(n%8==7)
+        return 4;
+    if(isSquares(n))
+        return 1;
+    max = (int)sqrt(n);
+    for(j = max;j>=max/2;j--)
+        if(isSquares(n-j*j))
+            return 2;
+    return 3;
+}
 
 // @lc code=end
 

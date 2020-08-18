@@ -44,10 +44,37 @@
  * The sizes of the arrays are returned as *returnColumnSizes array.
  * Note: Both returned array and *columnSizes array must be malloced, assume caller calls free().
  */
-int** combinationSum3(int k, int n, int* returnSize, int** returnColumnSizes){
-
+#define MAX_NUM 500
+int g_visited[9];
+void dfs(int k, int n, int* returnSize, int** returnColumnSizes, int *temp, int index, int start, int **res){
+    if (n == 0 && index == k) {
+        res[*returnSize] = (int*)malloc(sizeof(int) * index);
+        memcpy(res[*returnSize], temp, sizeof(int) * index);
+        (*returnColumnSizes)[*returnSize] = index;
+        (*returnSize)++;
+        return;
+    }
+    for (int i = start; i <= 9; i++) {
+        if (i <= n) {
+            temp[index] = i;
+            dfs(k, n - i, returnSize, returnColumnSizes, temp, index + 1, i + 1, res);
+        }
+    }
 }
-
+int** combinationSum3(int k, int n, int* returnSize, int** returnColumnSizes){
+    *returnSize = 0;
+    int **res = (int**)malloc(sizeof(int*) * MAX_NUM);
+    (*returnColumnSizes) = (int*)malloc(sizeof(int) * MAX_NUM);
+    int sum = 0;
+    for (int i = 9; i >= 1; i--)
+        sum += i;
+    if (n > sum)
+        return res;
+    memset(g_visited, 0, sizeof(int) * 9);
+    int *temp = (int*)malloc(sizeof(int) * 9);
+    dfs(k, n, returnSize, returnColumnSizes, temp, 0, 1, res);
+    return res;
+}
 
 // @lc code=end
 

@@ -45,8 +45,19 @@
  */
 
 
-int countNodes(struct TreeNode* root){
+void Search(struct TreeNode* node,int* p){
+    if (node ){
+        (*p)++;
+        Search(node->left,p);
+        Search(node->right,p);
+    }
+    return;
+}
 
+int countNodes(struct TreeNode* root){
+    int count = 0;
+    Search(root,&count);
+    return count;
 }
 
 

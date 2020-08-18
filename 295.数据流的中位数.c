@@ -48,28 +48,118 @@
 
 // @lc code=start
 
-
+#define MAXSIZE 10000
 
 typedef struct {
-    
+    int min_heap[MAXSIZE + 1];
+    int max_heap[MAXSIZE + 1];
+    int min_size;
+    int max_size;
 } MedianFinder;
 
-/** initialize your data structure here. */
+void swap(int *a, int *b) {
+    int temp = *a;
+    *a = *b;
+    *b = temp;
+}
+
+// 向heap中添加元素
+void heapAdd(int *heap, int x, int *size) {
+	if (*size > MAXSIZE) {
+		return;
+	}
+
+	int child = *size;
+	heap[*size] = x;
+	(*size)++;
+
+	for (int i = (child - 1) / 2; i >= 0 && child > 0; child = i, i = (i - 1) / 2) {
+		if (heap[MAXSIZE] == -1) {
+			if (heap[child] < heap[i]) {
+				swap(&heap[child], &heap[i]);
+			}
+		}
+		else {
+			if (heap[child] > heap[i]) {
+				swap(&heap[child], &heap[i]);
+			}
+		}
+	}
+}
+
+// 在 i 开始，从上往下做heapify
+void heapify(int *heap, int x, int size) {
+	if (2 * x + 1 >= size) {
+		return;
+	}
+
+	int child = 2 * x + 1;
+
+	if (heap[MAXSIZE] == -1) {
+		if (2 * x + 2 < size && heap[child] > heap[child + 1]) {
+			child++;
+		}
+		if (heap[x] > heap[child]) {
+			swap(&heap[x], &heap[child]);
+		}
+	}
+	else {
+		if (2 * x + 2 < size && heap[child] < heap[child + 1]) {
+			child++;
+		}
+		if (heap[x] < heap[child]) {
+			swap(&heap[x], &heap[child]);
+		}
+	}
+
+	heapify(heap, child, size);
+}
 
 MedianFinder* medianFinderCreate() {
-    
+	MedianFinder* obj = (MedianFinder *)malloc(sizeof(MedianFinder));
+	obj->min_size = 0;
+	obj->max_size = 0;
+	obj->min_heap[MAXSIZE] = -1;  // 小顶堆标志，可以采用在[0]放哨兵的方式，但是懒得修改了。
+	obj->max_heap[MAXSIZE] = 1;
+
+	return obj;
 }
 
 void medianFinderAddNum(MedianFinder* obj, int num) {
-  
+    // 添加元素，并平衡两个堆
+	if (obj->max_size <= obj->min_size) {
+        if (obj->min_size > 0 && num > obj->min_heap[0]) {
+            heapAdd(obj->max_heap, obj->min_heap[0], &obj->max_size);
+            obj->min_heap[0] = num;
+            heapify(obj->min_heap, 0, obj->min_size);
+        } else {
+		    heapAdd(obj->max_heap, num, &obj->max_size);
+        }
+	}
+	else {
+        if (obj->max_size > 0 && num < obj->max_heap[0]) {
+            heapAdd(obj->min_heap, obj->max_heap[0], &obj->min_size);
+            obj->max_heap[0] = num;
+            heapify(obj->max_heap, 0, obj->max_size);
+        } else {
+		    heapAdd(obj->min_heap, num, &obj->min_size);
+        }
+	}
 }
 
 double medianFinderFindMedian(MedianFinder* obj) {
-  
+    if (obj->max_size == 0) {
+        return 0;
+    }
+    if (obj->max_size > obj->min_size) {
+        return obj->max_heap[0];
+    } else {
+        return ((double)obj->max_heap[0] + obj->min_heap[0]) / 2;
+    }
 }
 
 void medianFinderFree(MedianFinder* obj) {
-    
+    free(obj);
 }
 
 /**

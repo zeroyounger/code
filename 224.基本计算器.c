@@ -46,7 +46,80 @@
 
 
 int calculate(char * s){
-
+    unsigned int i = 0, tmp = 0, top1 = 0, top2 = 0, flag = 0;
+    unsigned int *stack1 = (int *)malloc(sizeof(int) * strlen(s));
+    char *stack2 = (char *)malloc(strlen(s));
+    unsigned int a, b, res = 0;
+    char smb;
+    while (s[i] != '\0'){
+        if (s[i] >= '0' && s[i] <= '9'){
+            tmp = tmp * 10 + s[i] - '0';
+            flag = 1;
+        }
+        else if (flag){
+            if (top2 > 0 && stack2[top2-1] == '+'){
+                a = stack1[--top1];
+                stack1[top1++] = a + tmp;
+                top2--;
+            }
+            else if (top2 > 0 && stack2[top2-1] == '-'){
+                a = stack1[--top1];
+                stack1[top1++] = a - tmp;
+                top2--;
+            }
+            else{
+                stack1[top1++] = tmp;
+            }
+            tmp = 0;
+            flag = 0;
+        }
+        switch (s[i]){
+            case '(':
+                stack2[top2++] = '(';
+                break;
+            case '+':
+                stack2[top2++] = '+';
+                break;
+            case '-':
+                stack2[top2++] = '-';
+                break;
+            case ')':
+                top2--;
+                if (top2 > 0 && stack2[top2-1] == '+'){
+                    a = stack1[--top1];
+                    b = stack1[--top1];
+                    stack1[top1++] = a + b;
+                    top2--;
+                }
+                else if (top2 > 0 && stack2[top2-1] == '-'){
+                    a = stack1[--top1];
+                    b = stack1[--top1];
+                    stack1[top1++] = b - a;
+                    top2--;
+                }
+                break;
+            default:
+                break;
+        }
+        i++;
+    }
+    if (flag){
+        if (top2 > 0 && stack2[top2-1] == '+'){
+            a = stack1[--top1];
+            stack1[top1++] = a + tmp;
+        }
+        else if (top2 > 0 && stack2[top2-1] == '-'){
+            a = stack1[--top1];
+            stack1[top1++] = a - tmp;
+        }
+        else{
+            stack1[top1++] = tmp;
+        }
+    }
+    res = stack1[0];
+    free(stack1);
+    free(stack2);
+    return res;
 }
 
 

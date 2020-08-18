@@ -51,8 +51,32 @@
 // @lc code=start
 
 
-int numIslands(char** grid, int gridSize, int* gridColSize){
+void dfs(char **g, int m, int n, int i, int j){
+    g[i][j] = '2';
+    if (i > 0 && g[i - 1][j] == '1')
+        dfs(g, m, n, i - 1, j);
+    if (j > 0 && g[i][j - 1] == '1')
+        dfs(g, m, n, i, j - 1);
+    if (i < m - 1 && g[i + 1][j] == '1')
+        dfs(g, m, n, i + 1, j);
+    if (j < n - 1 && g[i][j + 1] == '1')
+        dfs(g, m, n, i, j + 1);
+}
 
+int numIslands(char** grid, int gridSize, int* gridColSize){
+    if (!grid || !gridSize || !gridColSize || !(*gridColSize))
+        return 0;
+    int colSize = *gridColSize;
+    int count = 0;
+    for (int i = 0; i < gridSize; i++) {
+        for (int j = 0; j < colSize; j++) {
+            if (grid[i][j] == '1') {
+                dfs(grid, gridSize, colSize, i, j);
+                count += 1;
+            }
+        }
+    }
+    return count;
 }
 // @lc code=end
 

@@ -36,7 +36,25 @@
  * Note: The returned array must be malloced, assume caller calls free().
  */
 char ** summaryRanges(int* nums, int numsSize, int* returnSize){
-
+    char** res = (char**)malloc(sizeof(char*) * 1024);
+    *returnSize = 0;
+    
+    int i, j;
+    
+    for(i = 0, j = 0; j < numsSize; j++){
+        if(j + 1 == numsSize || nums[j+1] > nums[j] + 1){
+            res[*returnSize] = (char*)malloc(sizeof(char) * 32);
+            if(j > i){
+                sprintf(res[*returnSize], "%d->%d", nums[i], nums[j]);
+            }else{
+                sprintf(res[*returnSize], "%d", nums[i]);
+            }
+            (*returnSize)++;
+            i = j + 1;
+        }
+    }
+    
+    return res;
 }
 
 

@@ -36,9 +36,24 @@
  * Note: The returned array must be malloced, assume caller calls free().
  */
 int* singleNumber(int* nums, int numsSize, int* returnSize){
+    int i, num = 0;
+    for(i = 0; i < numsSize; i++){
+        num ^= nums[i];
+    }
+    num = num & (~num + 1);
+    int* res = (int*)malloc(sizeof(int) * 2);
+    res[0] = res[1] = 0;
 
+    for(i = 0; i < numsSize; i++){
+        if(nums[i] & num){
+            res[0] ^= nums[i];
+        }else{
+	    res[1] ^= nums[i];
+	    }
+    }
+    *returnSize = 2;
+    return res;
 }
-
 
 // @lc code=end
 

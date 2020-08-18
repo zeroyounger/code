@@ -40,11 +40,35 @@
  * };
  */
 
-
 bool isPalindrome(struct ListNode* head){
-
+    if(head == NULL || head->next == NULL){
+        return true;
+    }
+    struct ListNode* mid1 = head;
+    struct ListNode* tmp = head->next;
+    while(tmp && tmp->next != NULL){
+        mid1 = mid1->next;
+        tmp = tmp->next->next;
+    }
+    struct ListNode* mid2 = mid1->next;
+    struct ListNode* cur = mid2->next;
+    while(cur != NULL){
+        mid2->next = cur->next;
+        cur->next = mid1->next;
+        mid1->next = cur;
+        cur = mid2->next;
+    }
+    mid2 = mid1->next;
+    cur = head;
+    while(mid2 != NULL){
+        if(cur->val != mid2->val){
+            return false;
+        }
+        cur = cur->next;
+        mid2 = mid2->next;
+    }
+    return true;
 }
-
 
 // @lc code=end
 

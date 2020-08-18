@@ -41,8 +41,21 @@
 // @lc code=start
 
 
+int cmp(const int *a, const int *b) {
+    return (*a - *b);
+}
 int maximumGap(int* nums, int numsSize){
-
+    if(numsSize < 2) return 0;
+    qsort(nums, numsSize, sizeof(int), cmp);
+    int i,j;
+    int *subNums = (int *)malloc((numsSize-1)*sizeof(int));
+    for (i=0; i<numsSize-1; i++)
+        subNums[i] = nums[i+1]-nums[i];
+    int bigOne = subNums[0];
+    for (i=1; i<numsSize-1; i++)
+        if(subNums[i] > bigOne)
+            bigOne = subNums[i];
+    return bigOne;
 }
 
 

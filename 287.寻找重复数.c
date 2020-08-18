@@ -43,7 +43,17 @@
 
 
 int findDuplicate(int* nums, int numsSize){
-
+    int *local = 0;
+    int i;
+    local= malloc(sizeof(int) * numsSize);
+    memset(local, 0, sizeof(int) * numsSize);
+    for (i=0; i<numsSize; i++)
+        local[nums[i]]++;
+    for (i=0; i<numsSize; i++)
+        if (local[nums[i]] > 1)
+            break;
+    free(local);
+    return nums[i];
 }
 
 

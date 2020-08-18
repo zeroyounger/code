@@ -45,7 +45,15 @@
 
 
 struct TreeNode* buildTree(int* preorder, int preorderSize, int* inorder, int inorderSize){
-
+    if(preorderSize==0) return NULL;
+    struct TreeNode* root=malloc(sizeof(struct TreeNode));
+    root->val=preorder[0];
+    int i=0;
+    while(inorder[preorderSize-i-1]!=preorder[0])
+        i++;
+    root->left=buildTree(preorder+1, preorderSize-i-1,  inorder, inorderSize-i-1);
+    root->right=buildTree(preorder+ preorderSize-i,  i,  inorder+inorderSize-i, i);
+    return root;
 }
 
 

@@ -55,8 +55,39 @@
  * The sizes of the arrays are returned as *returnColumnSizes array.
  * Note: Both returned array and *columnSizes array must be malloced, assume caller calls free().
  */
+#define MAX 1000
+int *all[MAX];
+int allsize[MAX];
+int cnt;
+void traverse (struct TreeNode *root, int *before, int size, int sum){
+    int i;
+    int *copyleft;
+    int *copyright;
+    int *copy;
+    if (root == NULL)
+        return;
+    before[size++] = root->val;
+    if (root->left == NULL && root->right == NULL && root->val == sum) {
+        copy = malloc(sizeof(int) * (size));
+        memcpy(copy, before, sizeof(int) * size);
+        allsize[cnt] = size;
+        all[cnt++] = copy;
+        return;
+    }
+    if (root->left != NULL)
+        traverse(root->left, before, size, sum - root->val);
+    if (root->right != NULL)
+        traverse(root->right, before, size, sum - root->val);
+    return;
+}
 int** pathSum(struct TreeNode* root, int sum, int* returnSize, int** returnColumnSizes){
-
+    int *before = malloc(sizeof(int) * MAX);
+    cnt = 0;
+    traverse(root, before, 0, sum);
+    *returnColumnSizes = allsize;
+    *returnSize = cnt;
+    free(before);
+    return all;
 }
 
 

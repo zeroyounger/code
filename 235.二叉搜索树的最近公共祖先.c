@@ -58,8 +58,15 @@
  * };
  */
 
-struct TreeNode* lowestCommonAncestor(struct TreeNode* root, struct TreeNode* p, struct TreeNode* q) {
-    
+struct TreeNode* res=NULL;
+struct TreeNode* lowestCommonAncestor(struct TreeNode* root, struct TreeNode* p, struct TreeNode* q){
+	if((root->val-p->val)*(root->val-q->val)<=0)
+		res=root;
+	else if(root->val<p->val&&root->val<q->val)
+		lowestCommonAncestor(root->right,p,q);
+	else
+		lowestCommonAncestor(root->left,p,q);
+	return res;
 }
 // @lc code=end
 

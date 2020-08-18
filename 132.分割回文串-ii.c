@@ -29,8 +29,29 @@
 // @lc code=start
 
 
+int isPal(char * s, int size){
+    int left=0,right=size-1;
+    while(left<right)
+        if(s[left++]!=s[right--])
+            return 0;
+    return 1;
+}
 int minCut(char * s){
-
+    int n = strlen(s);
+    int *f=(int*)malloc(sizeof(int)*(n+1));
+    char *tmp=malloc(sizeof(char)*n);
+    memset(tmp,0,n);
+    f[0]=-1;
+    for(int i=1;i<=n;i++){
+        f[i]=i;
+        for(int j=0;j<i;j++){
+            strncpy(tmp,s+j,i-j);
+            if(isPal(tmp,i-j))
+                f[i]=fmin(f[j]+1,f[i]);
+        }
+    }
+    free(tmp);
+    return f[n];
 }
 // @lc code=end
 

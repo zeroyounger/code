@@ -52,9 +52,12 @@
 
 
 struct TreeNode* invertTree(struct TreeNode* root){
-
+    if(root==NULL) return NULL;
+    struct TreeNode *rightTree=root->right;
+    root->right=invertTree(root->left);
+    root->left=invertTree(rightTree);
+    return root;
 }
-
 
 // @lc code=end
 

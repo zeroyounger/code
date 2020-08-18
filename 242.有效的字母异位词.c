@@ -37,10 +37,16 @@
 // @lc code=start
 
 
-bool isAnagram(char * s, char * t){
-
+bool isAnagram(char *s, char *t)
+{
+	int i, x[26] = {0};
+	for (i=0; s[i]!='\0'; i++)	x[s[i]-'a']++;
+	for (i=0; t[i]!='\0'; i++)	x[t[i]-'a']--;
+	for (i=0; i!=26; i++)
+		if (x[i] != 0)
+            return false;
+	return true;
 }
-
 
 // @lc code=end
 

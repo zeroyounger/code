@@ -31,10 +31,41 @@
 // @lc code=start
 
 
-char * shortestPalindrome(char * s){
-
+char anw[200000]; 
+char* shortestPalindrome(char* s) {
+    int len = strlen(s);
+    if(len==0) {
+        anw[0]='\0';
+        return anw;
+    }
+    int t[200000];
+    t[0]=-1;
+    int j=0,k=-1;int maxx=0;
+    while(j<len-1){
+        while(k>=0&&s[k]!=s[len-1-j]) {
+            k=t[k];
+        }   
+        j++;
+        k++;
+        t[j]=k;
+    }
+    maxx=t[len-1]+1;
+    int kind=1;
+    for(int i=0;i<len/2;i++) {
+        if(s[i]!=s[len-1-i]) {
+            kind=0;
+            break;
+        }
+    }
+    if(kind)
+        maxx=len;
+    for(int i=0;i<len-maxx;i++)
+        anw[i]=s[len-1-i];
+    for(int i=len-maxx;i<2*len-maxx;i++)
+        anw[i]=s[i-len+maxx];
+    anw[2*len-maxx]='\0';
+    return anw; 
 }
-
 
 // @lc code=end
 

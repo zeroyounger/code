@@ -53,8 +53,22 @@
  */
 
 
+int DfsSum(struct TreeNode* root, int *sum){
+    int leftMax = 0;
+    int rightMax = 0;
+    int tmp;
+    if (root == NULL)
+        return 0;
+    leftMax = DfsSum(root->left, sum);
+    rightMax = DfsSum(root->right, sum);
+    *sum = fmax(*sum, leftMax + root->val + rightMax);
+    tmp = fmax(leftMax, rightMax) + root->val;
+    return fmax(0, tmp);
+}
 int maxPathSum(struct TreeNode* root){
-
+    int sum = INT_MIN;
+    DfsSum(root, &sum);
+    return sum;
 }
 
 

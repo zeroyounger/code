@@ -54,10 +54,21 @@
 // @lc code=start
 
 
+char g_result[10000] = {0};
 char * getHint(char * secret, char * guess){
-
+    int aHashMap[10] = {0}, bHashMap[10] = {0};
+    int i, aCount=0, bCount=0;
+    for (i = 0; i < strlen(secret); i++)
+        if (guess[i] == secret[i]) aCount++;
+        else {
+            aHashMap[secret[i] - '0']++;
+            bHashMap[guess[i] - '0']++;
+        }
+    for (i = 0; i < 10; i++) 
+        bCount += fmin(aHashMap[i], bHashMap[i]);
+    sprintf(g_result, "%dA%dB", aCount, bCount);
+    return g_result;
 }
-
 
 // @lc code=end
 

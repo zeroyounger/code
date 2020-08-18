@@ -60,8 +60,178 @@
 // @lc code=start
 
 
-int ladderLength(char * beginWord, char * endWord, char ** wordList, int wordListSize){
+#define MAX_LEN 100000
+#define WORD_LEN 100
+typedef struct {
+    char word[WORD_LEN];
+    unsigned short step[2];
+} Node;
 
+typedef struct {
+    Node node[MAX_LEN];
+    int front;
+    int rear;
+    int size;
+} Queue;
+
+Queue g_queue1;
+Queue g_queue2;
+
+#define INT_MAX 0x7fffffff
+#define NEXT_MAX 26
+
+typedef struct tagNode {
+    int pass;
+    int end;
+    int step[2];
+    struct tagNode *next[NEXT_MAX];
+} TNode, *Trie;
+
+#define LETTER_MAX 26
+char *g_word = NULL;
+char *g_endWord = NULL;
+Trie g_root = NULL;
+int g_wordLen = 0;
+
+#define ENTER_QUEUE(queue, dir, w, s) \
+do { \
+    int len; \
+    char *tmp = (queue)->node[(queue)->rear].word; \
+    len = strlen(w); \
+    (void)strncpy(tmp, w, len); \
+    tmp[len] = '\0'; \
+    (queue)->node[(queue)->rear].step[dir] = s; \
+    (queue)->rear++; \
+} while (0)
+Trie CreateNode(void){
+    int len;
+    Trie node = NULL;
+    len = sizeof(TNode);
+    node = (Trie)malloc(len);
+    if (node == NULL)
+        return NULL;
+    memset(node, 0, len);
+    node->step[0] = INT_MAX;
+    node->step[1] = INT_MAX;
+    return node;
+}
+void Insert(Trie root, char *s){
+    Trie t = root;
+    int len = 0;
+    int idx;
+    Trie tmp = NULL;
+    len = strlen(s);
+    for (int i = 0; i < len; i++) {
+        idx = s[i] - 'a';
+        if (t->next[idx] == NULL) {
+            tmp = CreateNode();
+            if (tmp == NULL)
+                return;
+            t->next[idx] = tmp;
+        }
+        t = t->next[idx];
+        t->pass++;
+    }
+    t->end++;
+    return;
+}
+void CreateDict(char ** words, int wordsSize){
+    Trie root = NULL;
+    root = CreateNode();
+    for (int i = 0; i < wordsSize; ++i)
+       Insert(root, words[i]);
+    Insert(root, g_word);
+    g_root = root;
+    return;
+}
+Trie HasAnswer(char * word, bool dir){
+    int i;
+    int idx;
+    Trie t = g_root;
+    if (t == NULL)
+        return NULL;
+    for (i = 0; i < g_wordLen; ++i) {
+        idx = word[i] - 'a';
+        if (t->next[idx] == NULL)
+            return NULL;
+        t = t->next[idx];      
+    }
+    if (t->end <= 0)
+        return NULL;
+    return t;
+}
+void InitQueue(char * beginWord, char * endWord){
+    g_queue1.front = 0;
+    g_queue1.rear = 0;
+    g_queue2.front = 0;
+    g_queue2.rear = 0;
+    ENTER_QUEUE(&g_queue1, 0, beginWord, 0);
+    ENTER_QUEUE(&g_queue2, 1, endWord, 0);
+    return;
+}
+char g_letter[] = "abcdefghijklmnopqrstuvwxyz";
+int Bfs(bool dir, Queue *queue, char **wordList){
+    char *word = NULL;
+    int step, i, j;
+    int size = queue->rear - queue->front;
+    Trie t = NULL;
+    Trie t2 = NULL;
+    while (size-- > 0) {
+        word = queue->node[queue->front].word;
+        step = queue->node[queue->front].step[dir];
+        queue->front++;  
+        ++step;
+        for (i = 0; i < g_wordLen; i++) {
+            char tmp = word[i];
+            for (j = 0; j < LETTER_MAX; j++) {    
+                if (tmp ==g_letter[j])
+                    continue;
+                word[i] = g_letter[j];           
+                t = HasAnswer(word, dir);
+                if (t == NULL)
+                    continue;
+                if (t->step[dir] != INT_MAX)
+                    continue;
+                if (t->step[!dir] != INT_MAX)
+                    return step + t->step[!dir] + 1;
+                t->step[dir] = step;
+                ENTER_QUEUE(queue, dir, word, step);           
+            }
+            word[i] = tmp;
+        }
+    }   
+    return 0;
+}
+int ladderLength(char * beginWord, char * endWord, char ** wordList, int wordListSize){
+    int i;
+    int step;
+    char mask[WORD_LEN] = {0};
+    Trie t = NULL;
+    if (strcmp(beginWord, endWord) == 0)
+        return 1;
+    g_wordLen = strlen(beginWord);
+        g_word = beginWord;
+    g_endWord = endWord; 
+    CreateDict(wordList, wordListSize);
+    t = HasAnswer(beginWord, 0);
+    if (t == NULL)
+        return 0;
+    t->step[0] = 0;
+    t = HasAnswer(endWord, 1);
+    if (t == NULL)
+        return 0;
+    t->step[1] = 0;
+    InitQueue(beginWord, endWord);
+    bool dir = false;
+    while ((g_queue1.front != g_queue1.rear) && (g_queue2.front != g_queue2.rear)) {
+        step = Bfs(dir, &g_queue1, wordList);
+        if (step)
+            return step;
+        step = Bfs(!dir, &g_queue2, wordList);
+        if (step)
+            return step;
+    }
+    return 0;
 }
 
 

@@ -64,8 +64,17 @@
 // @lc code=start
 
 
-int numDistinct(char * s, char * t){
-
+int numDistinct(char* s, char* t) {
+    int m=strlen(t),n=strlen(s);
+    if(m>n) return 0;
+    long  dp[m+1];
+    memset(dp,0,sizeof(dp));
+    dp[0]=1;
+    for(int j=0;j<n;j++)
+        for(int i=m-1;i>=0;i--)
+            if(s[j]==t[i])
+                dp[i+1]+=dp[i];
+    return dp[m];
 }
 
 

@@ -45,7 +45,9 @@
 
 
 int minDepth(struct TreeNode* root){
-
+    if(root==NULL) return 0;
+    int left=minDepth(root->left), right=minDepth(root->right);
+    return (left && right) ? 1+ fmin(left,right):1+left+right;
 }
 
 

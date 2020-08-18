@@ -59,7 +59,8 @@
  * };
  */
 void deleteNode(struct ListNode* node) {
-    
+    *node = *(node->next);
+    return;
 }
 // @lc code=end
 

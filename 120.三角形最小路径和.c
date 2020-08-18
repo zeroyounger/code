@@ -43,9 +43,19 @@
 
 
 int minimumTotal(int** triangle, int triangleSize, int* triangleColSize){
-
+    if (triangle == NULL || triangleSize <= 0)
+        return 0;
+    int i, j, res;
+    int *dp = (int*)malloc(sizeof(int) * triangleColSize[triangleSize-1]);
+    for (i = 0; i < triangleColSize[triangleSize-1]; i++)
+        dp[i] = triangle[triangleSize-1][i];
+    for (i = triangleSize - 2; i >= 0; i--)
+        for (j = 0; j < triangleColSize[i]; j++)
+            dp[j] = (dp[j] > dp[j+1]) ? dp[j+1] + triangle[i][j] : dp[j] + triangle[i][j];
+    res = dp[0];
+    free(dp);
+    return res;
 }
-
 
 // @lc code=end
 
